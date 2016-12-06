@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/handlebars.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
+		<h1 class="mui-title">选择课程</h1>
+	</header>	
+</body>
+<script type="text/javascript" charset="UTF-8">
+_T.ready(function(){
+	_T.mui_init({
+		subpages: [{
+			id: 'select_course_sub',
+			url: 'select_course_sub.html',
+//			styles: {
+//				top: '45px',
+//				bottom: 0,
+//				bounce: 'vertical'
+//			}
+		}]
+	});
+	_T.bindBack("#back");
+});
+</script>
+</html>

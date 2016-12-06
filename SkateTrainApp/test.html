@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<body class="index_sub">
+	<div class="mui-content">	
+		<div class="courselist" id="list">
+			<div  class="item" v-for="item in sr"> 
+				<img src='{{D.url_war}}{{D.url_file}}{{item.file_path}}'  v-on:click="clickItem" course_id="{{item.course_id}}">
+				<div class="title">{{item.title}}</div> 
+				<div class="users">2907人参加</div> 
+			</div>
+		</div>	
+		<div class="additem" id="additem" course_id="{{course_id}}" v-on:click="clickAddItem"> 
+			<div class="txt">添加课程</div>
+		</div>		
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">  
+_T.ready(function(){
+	_T.mui_init();
+	
+	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null
+		},
+		ready:function(){
+			var that = this;
+			_T.ajax_json('index_sub/',function(data){
+				that.sr = data;
+			});
+		},		
+		methods:{
+			clickItem:function(){
+				var dom = $(event.target);
+				_T.open({
+				    url:"course_sub.html?course_id="+dom.attr('course_id'),
+				    id:"is_course"
+				});				
+			},
+			clickAddItem:function(){
+				_T.open({
+					id:"course",
+				    url:"select_course.html"
+				});				
+			}
+		}
+	});
+});	
+</script>
+</html>
+
+<!--
+	作者：chenshiming0802@163.com
+	时间：2016-08-21
+	描述：
+	
+v-if ="page=='home-page'"
+v-on:click="clickAddItem"
+<image v-bind:src
+-->

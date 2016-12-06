@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<body class="course">
+	<header class="mui-bar mui-bar-nav">
+		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
+		<h1 class="mui-title">{{D.app_name}}</h1>
+	</header>		
+	<div class="mui-content" > 
+		<div class="banner">
+			<img id='img' class="img" v-bind:src="D.url_file+sr.course.bigimg_file" >
+			<div class="title" id="course_title">{{sr.course.title}}</div>
+			<div class="p1" id="course_sec_title"></div>
+			<div class="p2">
+				{{sr.course.user_count}}人参加
+			</div>				
+		</div>
+		<div class="titlebar" id="titlebar">
+			<div class="left" >
+				课程计划
+			</div>
+			<!--<div class="right">
+				69 分
+			</div>-->
+		</div>
+	 	<div class="listbar" id="listbar">
+			<div  class="item" v-for="item in sr.course_daily"> 
+				<h5 style="background-color:#efeff4">{{item.title}}</h5>
+				<ul class="mui-table-view mui-grid-view">
+				<li class="mui-table-view-cell mui-media mui-col-xs-6" v-for="iitem in item.events">
+					<img v-if="iitem.is_under_struct!='1'" class="mui-media-object" v-on:click="clickEvent" v-bind:src="D.url_file+iitem.smallpic_file" course_event_id="{{iitem.id}}">
+					<img v-if="iitem.is_under_struct=='1'" class="mui-media-object" v-on:click="clickUcEvent" v-bind:src="D.url_war+D.image_under_construction" course_event_id="{{iitem.id}}">
+					<div class="mui-media-body">{{iitem.title}}</div>
+				</li>
+				</ul>
+			</div>
+	 	</div>
+		<div class="fix_blank">&nbsp;</div>
+		<!--
+		<div id="join_couser" v-on:click="clickJoin">加入我的计划</div>
+		<div id="unjoin_course" v-on:click="clickUnjoin">从我的课程中删除计划</div>
+        -->
+
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">
+//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false); 会造成上线不能滚动
+_T.ready(function(){
+	_T.mui_init();
+ 
+ 	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null,
+			hasJoin:1,
+		},
+		ready:function(){
+			var that = this;
+			_T.ajax_json('course/?course_id='+_T.get('course_id'),function(data){
+				that.sr = data;
+				
+	 			if(data.course.has_join==1){
+	 				that.hasJoin = 1;
+	 				$("#unjoin_course").css('display','block');
+	 			}else{
+	 				that.hasJoin = 0;
+	 				$("#join_couser").css('display','block');
+	 			}				
+			});
+		},		
+		methods:{
+			clickEvent:function(){
+				var dom = $(event.target);
+				if(this.hasJoin==1){
+					_T.open({
+					    url:"course_event_sub2.html?course_event_id="+dom.attr('course_event_id'),
+					    id:"course_event_sub"
+					    ,styles:{
+							hardwareAccelerated:true
+						}
+					});					
+				}else{
+					_T.toast("请先将本教程加入计划!");
+				}
+			},
+			clickUcEvent:function(){
+				_T.toast("教程建设中，谢谢关注");
+			},
+			clickJoin:function(){
+				var that = this;
+				_T.ajax('course/join_course/',{
+					data:{course_id:_T.get('course_id'),join_type:'join'},
+					dataType:'json',
+					type:'post',
+					success:function(data){
+						console.log(data);		
+						that.hasJoin = 1;
+						$("#join_couser").css('display','none');
+						$("#unjoin_course").css('display','block');
+						_T.toast("已经将本课程加入您的计划");
+						//return indexpage after join the course
+						_T.bindtap("#back",function(){
+				   			mui.back();
+				   		});						
+					}
+				});			
+			},
+			clickUnjoin:function(){
+				var that = this;
+				var btnArray = ['否', '是'];
+				mui.confirm('请确认从计划中删除此课程吗？', '删除确认', btnArray, function(e) {		
+					if (e.index == 1) {
+						_T.ajax('course/join_course/',{
+							data:{course_id:_T.get('course_id'),join_type:'unjoin'},
+							dataType:'json',
+							type:'post',
+							success:function(data){
+								console.log(data);	
+								that.hasJoin = 0;
+								$("#join_couser").css('display','block');
+								$("#unjoin_course").css('display','none');
+							}
+						});
+					}
+				});	
+			}
+		}
+ 	});
+	_T.bindBack("#back");
+ 
+	
+});
+
+</script>
+</html>

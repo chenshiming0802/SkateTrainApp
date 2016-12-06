@@ -1,0 +1,294 @@
+body{
+	font-family:"微软雅黑";	
+}
+/*
+header{
+	height:0px;
+	display: none;
+}
+.mui-bar-nav~.mui-content{
+	padding-top:0px;
+}
+*/
+header .noHeader{
+	height:0px;
+	display: none;
+}
+.mui-bar-nav~.mui-content .noHeader{
+	padding-top:0px;
+}
+.scroller {
+	/*replace by business width: 1500px; width: 1500px;*/ 
+}
+.scroller ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+.scroller li {
+	display: block;
+	float: left;
+	height: 100%;
+	font-size: 14px;
+}
+.clear{clear:both}
+/*--------------------------------*/
+.index_sub .courselist .title{
+	text-align: center;
+	font-size: 1rem;
+}
+.index_sub .courselist .item{
+	position:relative;
+	padding: 0px 0px 2px 0px;
+}
+.index_sub .courselist .item img{
+	width:100%;
+}
+.index_sub .courselist .item .title{
+	position: absolute;
+	left: 10px;
+	top:10px;
+	font-size: 1.2rem;
+	color: white;
+	
+}
+.index_sub .courselist .item .users{
+	position: absolute;
+	left: 10px;
+	bottom:10px;	
+	font-size: 0.8rem;
+	color: white;	
+}
+.index_sub .courselist .item .finisth{
+	position: absolute;
+	left: 50px;
+	top:70px;		
+}
+.index_sub .additem{
+	border: dashed 2px #222222;
+	height: 120px;
+	margin: 2px;
+}
+.index_sub .additem .txt{
+	text-align: center;
+	font-size: 1.2rem;
+	line-height: 120px;
+	color: #222222;
+}
+/*--------------------------------*/
+.select_courese_sub .list .item{
+	position: relative;
+	padding-bottom: 5px;
+}
+.select_courese_sub .list .item .img{
+	width: 640px;
+	height: 160px;
+}
+.select_courese_sub .list .item .title{
+	position: absolute;
+	top: 10px;
+	left: 20px;
+ 
+}
+.select_courese_sub .list .item .p1{
+	position: absolute;
+	top: 30px;
+	left: 20px;
+}
+.select_courese_sub .list .item .p2{
+	position: absolute;
+	top: 50px;
+	left: 20px;
+}
+.select_courese_sub .list .item .p3{
+	position: absolute;
+	top: 70px;
+	left: 20px;
+}
+/*--------*/
+.course .banner{
+	position: relative;
+}
+.course .banner .img{
+	width: 100%;
+}
+.course .banner .title{
+	position: absolute;
+	top:10px;
+	left: 10px;
+	font-size: 1.0rem;
+	color: white;
+}
+.course .banner .p1{
+	position: absolute;
+	top:40px;
+	left: 10px;	
+	font-size: 0.8rem;
+	color: white;
+}
+.course .banner .p2{
+	position: absolute;
+	bottom:10px;
+	left: 10px;	
+	font-size: 0.8rem;
+	color: white;
+}
+.course .banner .p3{
+	position: absolute;
+	top:100px;
+	left: 10px;	
+}
+.course .titlebar{
+	padding: 0px 0px 0px 10px;
+ 	overflow:hidden;
+ 	line-height: 40px;
+}
+.course .titlebar .left{
+	float: left;
+	font-size: 1rem;	
+	font-weight: bold; 	
+}
+.course .titlebar .right{
+	float: right;	
+}
+.course .listbar{
+	padding: 5px 0px 0px 10px;
+	border-top:  solid 1px #929292;
+}
+.course .listbar .item{
+	border-bottom:  solid 1px #929292;
+}
+.course .listbar .item .title{
+	font-size: 0.8rem;
+	line-height: 1.5rem;
+}
+.course .listbar .itemimg{
+	position: relative;
+}
+.course .listbar .itemimg .title2{
+	position: absolute;
+	top:0px;
+	left: 110px;	 
+	font-size: 1.0px;
+	font-weight: bold;
+}
+.course .listbar .itemimg .p1{
+	position: absolute;
+	top:20px;
+	left: 110px;	 
+	font-size: 1.0px;
+}
+.course .listbar .itemimg .score{
+	position: absolute;
+	top:30px;
+	left: 10px;		
+}
+.course .fix_blank{
+	line-height: 2.4rem;
+}
+.course #join_couser,#unjoin_course{
+	color: white;position: fixed;bottom: 0px;width: 100%;text-align: center;
+	font-size: 1.2rem;
+	line-height: 2.4rem;
+	display:none;
+}
+.course #join_couser{
+	background: green;
+}
+.course #unjoin_course{
+	background: red;
+}
+.course .title{
+	font-size: 1.2rem;
+	margin: 3px 0px 6px 0px;
+}
+.course .scroller li{
+	margin: 0px 10px 10px 0px;
+}
+/*-----*/
+.course_event_sub .film{
+	width: 100%;
+ 	position: fixed;
+ 	z-index: 1;
+}
+.course_event_sub .content{
+	padding: 10px;
+	z-index: 999;
+}
+.course_event_sub .title{
+	font-size: 1rem;
+	line-height: 1.5rem;
+	font-weight: bold;
+}
+.course_event_sub .title{
+	font-size: 1rem;
+	line-height: 2rem;
+}
+.course_event_sub .p1,.p2,.p3{
+	font-size: 0.8em;
+	line-height: 1.2rem;
+}
+.course_event_sub .list{
+	margin-top: 10px;
+}
+.course_event_sub .list .item{
+	position: relative;
+    display: table;
+    margin-bottom: 10px;
+}
+.course_event_sub .list .item .img{
+	width:100px;
+    display: table-cell;
+    margin-right: 10px;
+}
+.course_event_sub .list .item .img_title{
+	font-size: 0.8rem;
+    display: table-cell;
+ 	vertical-align: top;
+ 	
+}
+/*-----*/
+.select_courese_sub .courselist .item{
+	position:relative;
+	padding: 0px 0px 2px 0px;
+}
+.select_courese_sub .courselist .item img{
+	width:100%;
+}
+.select_courese_sub .courselist .item .title{
+	position: absolute;
+	left: 10px;
+	top:10px;
+	font-size: 1.2rem;
+	color: white;
+}
+.select_courese_sub .courselist .item .users{
+	position: absolute;
+	left: 10px;
+	bottom:10px;	
+	font-size: 0.8rem;
+	color: white;	
+}
+.select_courese_sub .courselist .item .finisth{
+	position: absolute;
+	left: 50px;
+	top:70px;		
+}
+.select_courese_sub .st{
+}
+.select_courese_sub .st .txt{
+	font-size: 0.8rem;
+	line-height: 30px;
+	color: #222222;
+}
+.select_courese_sub .noitem{
+}
+.select_courese_sub .noitem .txt{
+	text-align: center;
+	font-size: 0.8rem;
+	line-height: 30px;
+	color: #222222;
+}
