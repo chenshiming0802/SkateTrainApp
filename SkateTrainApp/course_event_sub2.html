@@ -1,3 +1,4 @@
+<!--本地电影入口，暂废弃-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +16,7 @@
    
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/mui.image.css" rel="stylesheet"/>
-    <!--<link href="css/app.css" rel="stylesheet"/>-->
+    <link href="css/app.css" rel="stylesheet"/><!---->
     <link href="css/videoPlaySimple.css" rel="stylesheet" />
 </head>
 	<!-- http://192.168.0.3/SkateTrainApp/course_event_sub2.html?course_event_id=1 -->
@@ -28,19 +29,19 @@
 	<div class="mui-content">	
 		<div class='film'>
 			<div id="videoContainer">
-				<video webkit-playsinline id="videoMedia" controls="controls" preload >
-					<!--src="
-						
-					http://192.168.0.3//html5Video/video/Wildlife.mp4"-->
-					<source src="http://192.168.0.3/html5Video/video/Wildlife.mp4" type='video/mp4' id='filmsource'>
+				<!--<video webkit-playsinline id="videoMedia" controls="controls" preload >
+					<source src="" type='video/mp4' id='filmsource'>
 					<p>浏览器不支持Html5 Video!</p>
-				</video>
-				<img id="videoMediaDefaultImg" src="http://192.168.0.3//html5Video/img/img_clickToPlay.png" /> <!--{{sr.model.title}}{{D.url_file}}{{sr.model.smallpic_file_file}} -->
+				</video>-->
+				<div id="videoContainer2"></div>
+				<img id="videoMediaDefaultImg" src="img/img_clickToPlay.png" /> <!--{{sr.model.title}}{{D.url_file}}{{sr.model.smallpic_file_file}} -->
 			</div>
+			<!--
 			<div id="TypeSwitch">
 				<button id="inlinePlayBtn" class="switchBtn choosed">内敛播放</button>
 				<button id="noInlinePlayBtn" class="switchBtn ">非内联播放</button>
-			</div>			
+			</div>
+			-->
 		</div>
 		<div id="videoMedia_block"></div>
 		<div id='tt'>
@@ -72,25 +73,45 @@
 	
 </style>
 <script type="text/javascript" charset="UTF-8">		
-//_T.ready(function(){
-//	_T.mui_init();
-//	$(".film_b").css("height",(window.screen.width*480/800-20)+"px");
-// 
-//	new Vue({
-//		el:"body",
-//		data:{
-//			D:window._D,
-//			sr:null,
-//			idatas:[],
-//		},
-//		ready:function(){
-//			var that = this;
-//			_T.ajax_json('course_event_sub?course_event_id='+_T.get('course_event_id'),function(data){
-//				that.sr = data; 
-//				 
-//				//$("#filmsource").attr("src",_D.url_file+data.model.film_file);
-//				$("#videoMediaDefaultImg").attr("src",_D.url_file+data.model.smallpic_file_file);
-//			
+_T.ready(function(){
+	_T.mui_init();
+	$(".film_b").css("height",(window.screen.width*480/800-20)+"px");
+ 	console.log('hi1');
+  
+	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null,
+			idatas:[],
+		},
+		ready:function(){
+			console.log('hi2');
+			var that = this;
+			_T.ajax_json('course_event_sub?course_event_id='+_T.get('course_event_id'),function(data){
+				console.log('hi3');
+				that.sr = data; 
+				var url = _D.url_file+data.model.film_file;
+				console.log('json='+url);
+				var str = "";
+				str += "<video webkit-playsinline playsinline                                                                                                    id=\"videoMedia\" controls=\"controls\" preload >";
+				str += "<source src=\""+url+"\" type='video/mp4' id='filmsource'>";
+				str += "<p>浏览器不支持Html5 Video!</p>";
+				str += "</video>";
+			
+				$("#videoContainer2").html(str);
+				//$("#videoMediaDefaultImg").attr("src",_D.url_file+data.model.smallpic_file_file);
+				
+				
+ 			   	var oHead = document.getElementsByTagName('HEAD').item(0); 
+    			var oScript= document.createElement("script"); 
+    			oScript.type = "text/javascript"; 
+			    oScript.src="js/videoPlaySimple.js"; 
+			    oHead.appendChild( oScript); 
+    
+				//$("#filmsource").attr("src",_D.url_file+data.model.film_file);
+				//$("#videoMediaDefaultImg").attr("src",_D.url_file+data.model.smallpic_file_file);
+			
 //				console.log("====>"+_D.url_file+data.model.film_file);
 //				document.getElementById("videoMedia").load();	
 //				$("#i_0").addClass("item_activie");		
@@ -122,28 +143,30 @@
 //						}
 //					}
 //				}
-//
-//
-//
-//			});
-//		},		
-//		methods:{
-//			clickImg:function(){
-//				var dom = $(event.target);
-//				var beginsec = parseInt(dom.attr("beginsec"))+1;
-//				var video = document.getElementById('videoMedia');
-//				video.currentTime = beginsec;
-//				//alert(beginsec)
-//			}
-//		}
-//	});	
-//	
-//	 
-//	_T.bindBack("#back");
-//	
-//
-//});	
+
+
+
+			});
+		},		
+		methods:{
+			clickImg:function(){
+				var dom = $(event.target);
+				var beginsec = parseInt(dom.attr("beginsec"))+1;
+				var video = document.getElementById('videoMedia');
+				video.currentTime = beginsec;
+				//alert(beginsec)
+			}
+		}
+	});	
+	
+	 
+	_T.bindBack("#back");
+	
+
+});	
+
+
 </script>
-<script src="js/videoPlaySimple.js"></script>
+<!--<script src="js/videoPlaySimple.js"></script>-->
  
 </html>

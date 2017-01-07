@@ -1,9 +1,11 @@
 <?php	
+
 define("APP_ROOT",dirname(dirname(dirname(__FILE__))));
 require APP_ROOT."/inc/run_json.php";
  
 
 function run($t){
+
 	$user = Assert::logined();
 	$dao = $t['dao'];
 	$dao->connect(false);

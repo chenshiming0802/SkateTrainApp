@@ -5,7 +5,7 @@
  * 设置一个边框与固定宽度
  */
 #videoContainer {
-	border: 1px solid #000;
+	background-color: #000000;
 	width: 360px;
 	max-width: 100%;
 }
@@ -22,8 +22,8 @@
  * 默认图片和videoContainer保持宽高一致
  */
 #videoContainer img{
-	width: 360px;
-	max-width: 100%;
+	width: 100%;
+ 
 }
 #TypeSwitch{
 	margin-top: 10px;

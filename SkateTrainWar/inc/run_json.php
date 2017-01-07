@@ -5,6 +5,7 @@ require_once APP_ROOT."/core/Json.php";
 require_once APP_ROOT."/core/Assert.php";	
 
 //log start
+ini_set('date.timezone','Asia/Shanghai');
 $log = date('h:i:s',time())."\r\n";
 $headers = apache_request_headers();
 foreach ($headers as $key => $value) {

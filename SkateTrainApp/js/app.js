@@ -14,8 +14,9 @@ window._T = {
 		$(document).ready(function(){
 			func();
 		});
-		
-		document.write ('<div id="div_la" style="position: absolute;right: 0px;"><script language="javascript" type="text/javascript" src="http://js.users.51.la/19019486.js"></script></a></div>');
+		document.write ('<div id="div_qinquan"><a href="mailto:sprcore_server@163.com">本网站所有视频来自网络</a></div>');
+		document.write ('<div id="div_qinquan_email"><a href="mailto:sprcore_server@163.com">sprcore_server@163.com</a></div>');
+		document.write ('<div id="div_la" style="text-align:center;font-size:11px;display:none"><script async="true" language="javascript" type="text/javascript" src="http://js.users.51.la/19019486.js"></script></a></div>');
 	},
 	_addUrlTs:function(url){
 		var timestamp = (new Date()).valueOf();
@@ -140,4 +141,5 @@ window._T = {
 		mui.alert(str, '系统提示', function() {
 		});   			
    },
+ 
 };

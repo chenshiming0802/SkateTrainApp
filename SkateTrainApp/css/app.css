@@ -292,3 +292,9 @@ header .noHeader{
 	line-height: 30px;
 	color: #222222;
 }
+
+
+#div_qinquan,#div_qinquan_email{
+	text-align: center;
+	font-size: 11px;
+}

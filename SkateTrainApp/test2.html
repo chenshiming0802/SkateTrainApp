@@ -1,0 +1,26 @@
+<base href="http://www.youku.com"/>
+Test6
+<div id="youkuplayer" style="width:480px;height:400px"></div>
+<script src="js/zepto.min.js"></script>
+<script type="text/javascript" src="http://player.youku.com/jsapi"></script>
+<script type="text/javascript">
+//alert("navigator.userAgent="+navigator.userAgent);
+player = new YKU.Player('youkuplayer',{
+	styleid: '0',
+	client_id: '5ae0cc8a903d23c8',
+	vid: 'XMTgyNDExOTYyNA',
+	newPlayer: true,
+	autoplay: true,
+	events:{
+		onPlayerReady: function(){ 
+ 
+		} 
+	}
+ 
+});
+ 
+setTimeout(function(){
+},3000)
+  
+
+</script>

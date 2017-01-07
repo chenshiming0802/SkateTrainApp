@@ -1,0 +1,128 @@
+<!--优酷视频入口-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+	<script src="js/mui.zoom.js"></script>
+	<script src="js/mui.previewimage.js"></script>
+	
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+    <script type="text/javascript" src="http://player.youku.com/jsapi"></script>
+
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/mui.image.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+	<!-- 由于内嵌页面会造成Image控件高度计算错误,造成图片显示在屏幕外    -->
+	<header class="mui-bar mui-bar-nav">
+		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
+		<h1 class="mui-title">动作预览</h1>
+	</header>
+<base href="http://www.youku.com"/>	
+<body class="course_event_sub" id='course_event_sub'>
+	<div class="mui-content">	
+		<div class='film' id="file_div" style="width:100%;">
+			<!--<video   webkit-playsinline id="videoMedia" class="margin" controls="controls"  width="100%" preload> 
+			  		<source  id="filmsource" type="video/mp4" src="http://192.168.0.3/SkateTrainWar/res/file/tiance1/5.mp4"/>
+				Your browser does not support the video tag.
+			</video>					-->
+		</div>
+		
+		<div class="film_b">&nbsp;</div>
+		<div id='tt'>
+			<div class="content" id="contentobj">
+				<div class="title" id='title'>{{sr.model.title}}</div>
+				<!--
+                <div class="p1"><b>难度系数：</b>  {{sr.model.degree_diff}}</div>	
+				<div class="p2"><b>训练要求：</b>  {{sr.model.num_demand}}</div>	
+               -->
+				<div class="p3"><b>动作要点：</b></div>	
+				<div class="list" id="listobj">
+					<div class="item" v-for="item in sr.list" id='i_{{$index}}'>
+						<img v-bind:src="D.url_file+item.img_file" class="img" data-preview-src="" data-preview-group="1" v-bind:beginsec="item.begin_seconds" v-bind:endsec="item.end_seconds" v-on:click="clickImg"> 
+						<div class="img_title"  data-preview-group="1" v-bind:beginsec="item.begin_seconds" v-bind:endsec="item.end_seconds" v-on:click="clickImg">{{{item.title}}}</div>
+					</div>					
+				</div>				
+			</div>
+		</div>
+		<!--
+		<div id="demo2">
+			<p style="height: 2px;"></p>
+			<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-block">下载</button>
+		</div>	
+       -->
+	</div>
+</body>
+ 
+<style>
+.item_activie{
+
+}
+.item_activie .img_title{
+	color:red;
+}
+	
+</style>
+<script type="text/javascript" charset="UTF-8">			
+_T.ready(function(){
+	_T.mui_init();
+	var w = $("#file_div").width();
+	var h = parseInt(w*9/16);
+	$("#file_div").height(h);
+	$(".film_b").height(h+2);
+ 	//$(".film_b").css("height",(window.screen.width*480/800-20)+"px");
+	//alert($("#file_div").height());
+	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null,
+			idatas:[],
+		},
+		ready:function(){
+			var that = this;
+			_T.ajax_json('course_event_sub?course_event_id='+_T.get('course_event_id'),function(data){
+				that.sr = data;
+				//$("#filmsource").attr("src",_D.url_file+data.model.film_file);
+				console.log(_D.url_file+data.model.film_file);
+				//console.log(data.model.film.file_type);
+			
+				player = new YKU.Player('file_div',{
+					styleid: '0',
+					client_id: '299b3396bf758ea9',
+					vid: data.model.film.file_path,
+					newPlayer: false,
+					autoplay: true,
+					events:{
+						onPlayerReady: function(){ }
+					}
+				}); 				
+				
+				 
+			});
+		},		
+		methods:{
+			clickImg:function(){
+				var dom = $(event.target);
+				var beginsec = parseInt(dom.attr("beginsec"))+1;
+				var video = document.getElementById('videoMedia');
+				video.currentTime = beginsec;
+				//alert(beginsec)
+			}
+		}
+	});	
+	
+	 
+	_T.bindBack("#back");
+	
+
+});	
+</script>
+
+</html>

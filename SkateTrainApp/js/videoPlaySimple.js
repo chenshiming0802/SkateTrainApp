@@ -55,11 +55,14 @@
 		//ios下的非内联也可以(不是必须)隐藏图片
 		//普通浏览器也要隐藏,ios plus下也要隐藏
 		//android下因为非内联使用原生播放的,所以直接隐藏video
+ 
+		
 		if (isInlinePlay || !(window.plus && plus.os.name == 'Android')) {
 			switchDefaultImgShow(false);
 		}
 		var url = videoMedia.getElementsByTagName('source')[0].src;
-		alert("url="+url);
+		//var url = "http://192.168.0.3/html5Video/video/Wildlife.mp4";
+		//alert("url2="+url);
 		playHtml5Video(url, videoMedia, function(isPlay) {
 			if (isPlay) {
 				console.log('播放了');
