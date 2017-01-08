@@ -1,4 +1,5 @@
 <?php
+require_once APP_ROOT."/inc/config.php";
 require_once APP_ROOT."/core/Utils.php";	
 require_once APP_ROOT."/core/Dao.php";	
 require_once APP_ROOT."/core/Json.php";	
@@ -16,7 +17,7 @@ $log .= "[URL]".$_SERVER['REQUEST_URI']."\r\n";
 
 try {
 	$dao = new Dao();
-	$dao->init('mysql:host=127.0.0.1;dbname=skatetrainapp', "root", "");
+	$dao->init('mysql:host='.DB_HOSTS.';dbname='.DB_NAME, DB_USER, DB_PSD);
 	$t = array(
 		"dao"=>$dao,
 		"request"=>$_REQUEST
