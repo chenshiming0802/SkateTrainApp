@@ -33,6 +33,10 @@ _T.ready(function(){
 			sr:null
 		},		
 	});
+	
+	mui.os.plus && !mui.os.stream && mui.plusReady(function(){
+		_T.app_update();
+	});	
 });
 ////退到后台(webview)
 //document.addEventListener('pause', function(e) {

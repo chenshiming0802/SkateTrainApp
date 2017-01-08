@@ -5,9 +5,9 @@
 		"iPad"
 	],
 	"id": "H5BDA8EC5",/*应用的标识，创建应用时自动生成，勿手动修改*/
-	"name": "SkillWork",/*应用名称，程序桌面图标名称*/
+	"name": "轮滑视频",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.0.0",/*应用版本名称*/
+		"name": "1.0.1",/*应用版本名称*/
 		"code": "83"
 	},
 	"description": "",/*应用描述信息*/
@@ -194,7 +194,7 @@
 					 /*普通屏启动图片，分辨率：240x282*/
 					 /*大屏启动图片，分辨率：320x442*/
 					 /*高分屏启动图片，分辨率：480x762*/
-					"hdpi":"C:/fosun_work/source/github_src/SkateTrainApp/trunk/other/splash/480_720.png","mdpi":"C:/fosun_work/source/github_src/SkateTrainApp/trunk/other/splash/480_720.png","ldpi":"C:/fosun_work/source/github_src/SkateTrainApp/trunk/other/splash/480_720.png","xhdpi":"C:/fosun_work/source/github_src/SkateTrainApp/trunk/other/splash/480_720.png","xxhdpi":"C:/fosun_work/source/github_src/SkateTrainApp/trunk/other/splash/480_720.png"
+					"hdpi":"C:/fosun_work/source/github_src/SkateTrainApp/other/splash/480_720.png","mdpi":"C:/fosun_work/source/github_src/SkateTrainApp/other/splash/480_720.png","ldpi":"C:/fosun_work/source/github_src/SkateTrainApp/other/splash/480_720.png","xhdpi":"C:/fosun_work/source/github_src/SkateTrainApp/other/splash/480_720.png","xxhdpi":"C:/fosun_work/source/github_src/SkateTrainApp/other/splash/480_720.png"
 				}
 			},
 			"debug": true
@@ -295,7 +295,9 @@
 					"js/app.js",
 					"css/mui.min.css",
 					"fonts/mui.ttf",
-					"css/app.css"
+					"css/app.css",
+					"js/appdata.js",
+					"js/vue.min.js"
 				],
 				"refer": [
 					"course.html",

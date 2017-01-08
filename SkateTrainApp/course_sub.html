@@ -40,7 +40,7 @@
 				<ul class="mui-table-view mui-grid-view">
 				<li class="mui-table-view-cell mui-media mui-col-xs-6" v-for="iitem in item.events">
 					<img v-if="iitem.is_under_struct!='1'" class="mui-media-object" v-on:click="clickEvent" v-bind:src="D.url_file+iitem.smallpic_file" course_event_id="{{iitem.id}}">
-					<img v-if="iitem.is_under_struct=='1'" class="mui-media-object" v-on:click="clickUcEvent" v-bind:src="D.url_war+D.image_under_construction" course_event_id="{{iitem.id}}">
+					<img v-if="iitem.is_under_struct=='1'" class="mui-media-object" v-on:click="clickUcEvent" v-bind:src="D.base_url+D.image_under_construction" course_event_id="{{iitem.id}}">
 					<div class="mui-media-body">{{iitem.title}}</div>
 				</li>
 				</ul>
