@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap>
+ 
+
+	<select id="index_sub" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		  t1.id           course_id,
+		  t1.title,
+		  a1.file_path,
+		  (SELECT COUNT(*) FROM td_user_course a2 WHERE a2.course_id=t1.id AND a2.is_deleted='0') count_user
+		FROM td_course t1
+		  LEFT JOIN td_file a1
+		    ON a1.is_deleted = '0'
+		      AND t1.img_file_id = a1.id,
+		  td_user_course t2
+		WHERE t1.is_deleted = '0'
+		    AND t2.is_deleted = '0'
+		    AND t1.id = t2.course_id
+				ORDER BY t1.no asc
+	</select>
+
+	<select id="disc_list" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		  t1.id,
+		  t1.title,
+		  t1.content_type,
+		  t1.publish_time,
+		  a1.file_path       small_file_path
+		FROM td_disc_article t1
+		  LEFT JOIN td_file a1
+		    ON a1.is_deleted = '0'
+		      AND t1.small_img_id= a1.id
+		WHERE t1.is_deleted = '0'
+		<isNotEmpty prepend="and" property="key_id">
+        exists (select 1 from td_disc_article_key b1 where b1.key_id=#key_id#)
+        </isNotEmpty>          
+		ORDER BY t1.id desc	
+		limit 0,30
+	</select>	
+	
+	<select id="dics_article" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		  t1.*,
+		  a1.file_path filmimg_file_path,
+		  a1.file_type filmimg_file_type
+		FROM td_disc_article t1
+		  LEFT JOIN td_file a1
+		    ON a1.id = t1.filmimg_file_id
+		      AND a1.is_deleted = '0'
+		WHERE t1.is_deleted = '0'
+		    AND t1.id = #id#
+	</select>		 
+</sqlMap>
