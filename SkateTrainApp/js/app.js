@@ -1,10 +1,10 @@
 window._D = window._D||{};
-window._D.app_version = "1.0.1";
+//window._D.app_version = "1.1.0";
 window._D.app_name = "轮滑教学视频";
 window._D.image_under_construction = "/res/webdocs/images/under_construction.jpg";
 
 window._T = {
-	str_click_event :"tap",
+	str_click_event :"click",
 	//str_click_event :"tap", 
 	ready:function(func){
 		"use strict";
@@ -12,8 +12,8 @@ window._T = {
 		$(document).ready(function(){
 			func();
 		});
-		document.write ('<div id="div_qinquan"><a href="mailto:sprcore_server@163.com">本网站所有视频来自网络</a></div>');
-		document.write ('<div id="div_qinquan_email"><a href="mailto:chenshiming0802@163.com">给我邮件</a>&nbsp('+window._D.app_version+')</div>');
+//		document.write ('<div id="div_qinquan"><a href="mailto:sprcore_server@163.com">本网站所有视频来自网络</a></div>');
+//		document.write ('<div id="div_qinquan_email"><a href="mailto:chenshiming0802@163.com">给我邮件</a>&nbsp('+window._D.app_version+')</div>');
 		document.write ('<div id="div_la" style="text-align:center;font-size:11px;display:none"><script async="true" language="javascript" type="text/javascript" src="http://js.users.51.la/19019486.js"></script></a></div>');
 	},
 	_addUrlTs:function(url){
@@ -72,6 +72,10 @@ window._T = {
 		if(json==undefined){
 			json = {};	
 		}
+		var bottom = 0;
+		if(json.subpages!=undefined && json.subpages[0].bottom!=undefined){
+			bottom = json.subpages[0].bottom;
+		}		
 		if(json.swipeBack==undefined){
 			json.swipeBack = false;
 		}
@@ -91,11 +95,10 @@ window._T = {
 		if(json.subpages!=undefined && json.subpages[0].styles==undefined){
 			json.subpages[0].styles = {
 				top: top,
-				bottom: 0,
+				bottom: bottom,
 				bounce: 'vertical'
 			};
 		}
-	
 		mui.init(json);
 	},
 	bindtap:function(jqobjstr,func){
@@ -139,24 +142,41 @@ window._T = {
 		mui.alert(str, '系统提示', function() {
 		});   			
    },
+   //如果中版本为全量更新，小版本为增量更新
 	app_update:function() {
 		var that = this;
 		var url = window._D.base_url+"service/update/"; 
 		console.log("SYS_VERSION_CHECK="+url);
-		mui.getJSON(url, {
-			"appid": plus.runtime.appid,
-			"version": plus.runtime.version,
-			"imei": plus.device.imei
-		}, function(data) {
-			console.log("remote version:"+data.version+",local version:"+window._D.app_version);
-			if (data!=null && data.version!=null && that.compareVersion(data.version,window._D.app_version)) {
-				plus.nativeUI.confirm(data.note, function(event) {
-					if (0 == event.index) {
-						plus.runtime.openURL(data.url);
+		
+	    plus.runtime.getProperty(plus.runtime.appid,function(inf){
+	        var currentVersion=inf.version;//window._D.app_version
+	        console.log("当前应用版本："+currentVersion); 
+	        
+			mui.getJSON(url, {
+				"appid": plus.runtime.appid,
+				"version": plus.runtime.version,
+				"imei": plus.device.imei
+			}, function(data) {
+				console.log("remote version:"+data.version+",local version:"+currentVersion);
+				if (data!=null && data.version!=null && that.compareVersion(data.version,currentVersion)) {
+					if(that.compareMiddleVersion(data.version,currentVersion)){
+						console.log("全量更新," + currentVersion +"->" + data.version);
+						//全量更新
+						plus.nativeUI.confirm(data.note, function(event) {
+							if (0 == event.index) {
+								plus.runtime.openURL(data.url);
+							}
+						}, data.title+"("+plus.runtime.version+")", ["立即更新", "取　　消"]);							
+					}else{
+						console.log("增量更新," + currentVersion +"->" + data.version);
+						//增量更新
+						that.partInstall(data.wgt);
 					}
-				}, data.title+"("+plus.runtime.version+")", ["立即更新", "取　　消"]);
-			}
-		});
+				}
+			});	        
+	    });		
+		
+
 	},
 	//比较版本号
 	compareVersion:function (curV,reqV){  
@@ -179,5 +199,48 @@ window._T = {
 	      console.log("版本号不能为空");  
 	      return false;  
 	   }  
+	},
+	//比较中版本号
+	compareMiddleVersion:function(curV,reqV){
+	      var curVb = curV.substr(0,curV.lastIndexOf("."));	
+	      var reqVb = reqV.substr(0,reqV.lastIndexOf("."));
+		  //alert(curVb+"/"+reqVb);
+		  return this.compareVersion(curVb,reqVb);
+
+	},
+	
+	//增量更新
+	partInstall:function(wgtUrl){
+		console.log("增量更新包："+wgtUrl);
+		plus.downloader.createDownload( wgtUrl, {filename:"_doc/update/"}, function(d,status){
+	        if ( status == 200 ) { 
+	            console.log("下载wgt成功："+d.filename);
+	            var path = d.filename;
+			    plus.runtime.install(path,{},function(){
+			        console.log("安装wgt文件成功！");
+			    },function(e){
+			        console.log("安装wgt文件失败["+e.code+"]："+e.message);
+			    });	            
+	        } else {
+	            console.log("下载wgt失败！");
+	        }
+	    }).start();		
 	}
 };
+
+
+//消息推送点击后触发
+document.addEventListener( "plusready", function(){
+	console.log("index message");
+	plus.push.addEventListener( "click", function( msg ) {
+		//msg.payload , msg.content , msg.title
+		console.log("index click message:"+msg);
+		var pp = eval('(' + msg.payload + ')');
+		
+		console.log("_T.open:"+pp.to);
+		_T.open({
+		    url:pp.to,
+		    id:"is_course"
+		});	
+	}, false );
+}, false );

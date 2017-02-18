@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no"> 
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+ 
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<style>
+.disc_list .article_img{
+	width: 100px;
+}
+.disc_list .article_title{
+	padding-left: 10px;
+}
+.disc_list .key_str{
+	float: left;
+	line-height: 22px;
+	background-color:#C0C0C0;
+	margin: 5px 0px 5px 10px;
+	padding: 5px 5px 5px 5px;
+} 
+.loadmore{
+	width: 100%;
+	line-height: 80px;
+	text-align: center;
+}
+</style>
+<body class="disc_list">
+	<div class="mui-content">	
+		<!--<div class="mui-card"></div>-->
+			<div class="title">
+				<div v-for="item in sr.list_key" class="key_str" v-on:click="clickKeyItem" id_value="{{item.id}}">
+					{{item.name}}
+				</div>
+			</div>
+			<div class="clear"></div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media"  v-for="item in sr.list">
+					<a href="javascript:;" v-on:click="clickArticleItem" id_value="{{item.id}}">
+						<img class="article_img mui-pull-left" v-bind:src="D.url_file+item.small_file_path"  id_value="{{item.id}}">
+						<div class="article_title mui-media-body"  id_value="{{item.id}}">
+							{{item.title}}
+							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.keys}}</p>
+							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.publish_time}}</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<div class="loadmore" id="loadmore" v-on:click="clickLoadMore">-- 加载更多 --</div>
+		
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">  
+_T.ready(function(){
+	_T.mui_init();
+	
+	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null,
+			pageno:1,
+			pagesize:10
+		},
+		ready:function(){
+			var that = this;
+			_T.ajax_json('disc_list/?pageno=1&pagesize='+that.pagesize+'',function(data){
+				that.sr = data;
+			});	
+		},		
+		methods:{
+			clickKeyItem:function(){
+				var that = this;
+				var dom = $(event.target);
+				that.pageno = 1;
+				_T.ajax_json('disc_list/?pageno=1&pagesize='+that.pagesize+'&key_id='+dom.attr('id_value'),function(data){
+					console.log('------------------');
+					console.log(data);
+					that.sr = data;
+				});			
+			},
+			clickArticleItem:function(){
+				var that = this;
+				var dom = $(event.target);
+		 
+				_T.open({
+					id:"disc_article",
+				    url:"dics_article.html?id="+dom.attr('id_value'),
+				});				
+			},
+			clickLoadMore:function(){
+				var that = this;
+				var dom = $(event.target);
+				var nextpage = that.pageno+1;
+				var key_id = dom.attr('id_value');
+				if(key_id==null && key_id==undefined){
+					key_id = "";
+				}
+				
+				_T.ajax_json('disc_list/?pageno='+nextpage+'&pagesize='+that.pagesize+'&key_id='+key_id,function(data){			
+					if(data.list.length==0){
+						$("#loadmore").html("-- 没有记录了 -- ");
+					}else{
+						console.log(data.list.length);
+						//that.sr.list.push(data.list);
+						that.pageno = nextpage;
+						for(var ii=0,jj=data.list.length;ii<jj;ii++){
+							that.sr.list.push(data.list[ii]);
+						}
+					}
+				});					
+			}
+		}
+	});
+ 
+});	
+
+
+</script>
+</html>

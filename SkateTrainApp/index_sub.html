@@ -19,12 +19,12 @@
 			<div  class="item" v-for="item in sr"> 
 				<img v-bind:src="D.url_file+item.file_path"  v-on:click="clickItem" course_id="{{item.course_id}}">
 				<div class="title">{{item.title}}</div> 
-				<div class="users">{{item.count_user}}人参加</div> 
+				<!--<div class="users">{{item.count_user}}人参加</div> -->
 			</div>
 		</div>	
-		<div class="additem" id="additem" course_id="{{course_id}}" v-on:click="clickAddItem"> 
+		<!--<div class="additem" id="additem" course_id="{{course_id}}" v-on:click="clickAddItem"> 
 			<div class="txt">添加课程</div>
-		</div>		
+		</div>	-->	
 	</div>	
 </body>
  
@@ -64,31 +64,6 @@ _T.ready(function(){
 		}
 	});
 	
-	new Vue({
-		el:"body",
-		data:{
-			D:window._D,
-			sr:null
-		},
-		ready:function(){
- 			this.sr = [{"course_id":"1","title":"牛教练五式入门班2","file_path":"\\niu_5\\1_index.jpg","count_user":"1"},{"course_id":"2","title":"牛教练五式口诀班","file_path":"\\niu_5\\2_index.jpg","count_user":"1"}];
-		},		
-		methods:{
-			clickItem:function(){
-				var dom = $(event.target);
-				_T.open({
-				    url:"course_sub.html?course_id="+dom.attr('course_id'),
-				    id:"is_course"
-				});				
-			},
-			clickAddItem:function(){
-				_T.open({
-					id:"course",
-				    url:"select_course.html"
-				});				
-			}
-		}
-	});	
 });	
 //alert('ready dd1'+window.location.href);
  

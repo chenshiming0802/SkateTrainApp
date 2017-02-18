@@ -13,39 +13,163 @@
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/app.css" rel="stylesheet"/>
 </head>
+<style>
+.load{
+	width:100%;
+	text-align: center;
+}
+</style>
 <body>
 	<header class="mui-bar mui-bar-nav">
-		<h1 class="mui-title">{{D.app_name}}</h1>
+		<h1 class="mui-title" id='title'>{{D.app_name}}</h1>
 	</header>
+	<div class="mui-content" > 
+		<div class="load"><img src="img/load.gif"></div>
+	</div>	
+	<nav class="mui-bar mui-bar-tab">
+		<a id="defaultTab" class="mui-tab-item mui-active" href="index_sub.html">
+			<span class="mui-icon mui-icon-videocam"></span>
+			<span class="mui-tab-label">教学视频</span>
+		</a>
+		<a class="mui-tab-item" href="disc_list.html" >
+			<span class="mui-icon mui-icon-paperplane" id="d_newnum" ></span>
+			<span class="mui-tab-label" >发现</span>
+		</a>
+	</nav>	
 </body>
 <script type="text/javascript" charset="UTF-8">
+//http://192.168.0.3:82/SkateTrainApp/disc_list.html
+var mobile_app_id;
+function plusReady(){
+			try{//发现的红点
+				console.log("plusReady=");
+				mobile_app_id = plus.device.uuid;
+				console.log("mobile_app_id="+mobile_app_id);
+				_T.ajax_json('disc_newnum/?mobile_app_id='+mobile_app_id,function(data){
+					console.log(data);
+					if(parseInt(data.num)>0){
+						$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
+					}
+				});			 		
+			}catch(e){}
+}
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
 _T.ready(function(){
 	_T.mui_init({
 		subpages: [{
 			id: 'index_sub',
-			url: 'index_sub.html'
+			url: 'index_sub.html',
+			bottom: '51px'
 		}]
 	});
+ 
+	
 	new Vue({
 		el:"body",
 		data:{
 			D:window._D,
 			sr:null
-		},		
+		},	
+		ready:function(){ 
+			var that = this;
+
+		},	
+		methods:{
+ 
+		}
 	});
 	
 	mui.os.plus && !mui.os.stream && mui.plusReady(function(){
 		_T.app_update();
 	});	
+	
+	
+	//mui tabs begin
+			var subpages = ['index_sub.html', 'disc_list.html'];
+			var subpage_style = {
+				top: '45px',
+				bottom: '51px'
+			};
+			
+			var aniShow = {};
+			
+			 //创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				for (var i = 0; i < subpages.length; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+					if (i > 0) {
+						sub.hide();
+					}else{
+						temp[subpages[i]] = "true";
+						mui.extend(aniShow,temp);
+					}
+					self.append(sub);
+				}
+			});
+			 //当前激活选项
+			var activeTab = subpages[0];
+			var title = document.getElementById("title");
+			 //选项卡点击事件
+			mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				var targetTab = this.getAttribute('href');
+				if (targetTab == activeTab) {
+					return;
+				} 
+				
+				//更换标题
+				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+
+		 		
+				//显示目标选项卡
+				//若为iOS平台或非首次显示，则直接显示
+				if(mui.os.ios||aniShow[targetTab]){
+					plus.webview.show(targetTab);
+				}else{
+					//否则，使用fade-in动画，且保存变量
+					var temp = {};
+					temp[targetTab] = "true";
+					mui.extend(aniShow,temp);
+					plus.webview.show(targetTab,"fade-in",300);
+				}
+				//隐藏当前;
+				plus.webview.hide(activeTab);
+				
+		 		
+		 		if(targetTab=='disc_list.html'){
+					$("#d_newnum").html("");	  
+					try{//发现的红点
+						//var mobile_app_id = plus.runtime.appid;
+						console.log("mobile_app_id 2="+mobile_app_id);
+						_T.ajax_json('td_user_disc_log_add/?mobile_app_id='+mobile_app_id,function(data){
+							if(parseInt(data.num)>0){
+								$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
+							}
+						});						
+					}catch(e){}		 			
+		 		}				
+				
+				//更改当前活跃的选项卡
+				activeTab = targetTab;
+			});
+			 //自定义事件，模拟点击“首页选项卡”
+			document.addEventListener('gohome', function() {
+				var defaultTab = document.getElementById("defaultTab");
+				//模拟首页点击
+				mui.trigger(defaultTab, 'tap');
+				//切换选项卡高亮
+				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+				if (defaultTab !== current) {
+					current.classList.remove('mui-active');
+					defaultTab.classList.add('mui-active');
+				}
+			});	
+	//mui tabs end
 });
-////退到后台(webview)
-//document.addEventListener('pause', function(e) {
-//  alert("pause");
-//}, false);
-// 
-////唤醒(webview)
-//document.addEventListener('resume', function(e) {
-//  alert("resume");
-//}, false);
 </script>
 </html>
