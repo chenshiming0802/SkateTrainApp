@@ -36,10 +36,10 @@
 		      AND t1.small_img_id= a1.id
 		WHERE t1.is_deleted = '0'
 		<isNotEmpty prepend="and" property="key_id">
-        exists (select 1 from td_disc_article_key b1 where b1.key_id=#key_id#)
-        </isNotEmpty>          
-		ORDER BY t1.id desc	
-		limit 0,30
+        exists (select 1 from td_disc_article_key b1 where b1.key_id=#key_id# AND t1.id= b1.article_id)
+        </isNotEmpty>           
+		ORDER BY t1.publish_time desc
+		limit #offset_begin#,#offset_end#
 	</select>	
 	
 	<select id="dics_article" parameterClass="java.util.HashMap"

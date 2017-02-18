@@ -91,6 +91,10 @@ public class Dao {
 	 * @return
 	 */
 	public Map getTableRow(String tableName,Map whereParam,String orderby){
+		if(orderby==null){
+			orderby = "";
+		}
+		orderby += " limit 0,1";
 		List<Map> list = getTableList(tableName,whereParam,orderby);
 		if(list!=null && list.size()>0){
 			return list.get(0);
@@ -114,6 +118,15 @@ public class Dao {
 		List<Map> list = queryList(sql, param);
 		return list;
 	}
+	public Map getRow(String sql,List param) {
+		sql += " limit 0,1";
+		List<Map> list = queryList(sql, param);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}	
+	}
 	
 	private Object getDbCell(Object obj){
 		if (obj instanceof Timestamp) {
@@ -133,6 +146,9 @@ public class Dao {
 	private List<Map> queryList(String sql,Object[] param) {
 		return queryList(sql, convertToList(param));
 	}
+	
+	
+ 
 	public List<Map> queryList(String sql,List param) {
 		if(param==null){
 			param = new ArrayList();
@@ -344,7 +360,7 @@ public class Dao {
 		
 		return idao.getSqlMapClientTemplate().queryForList(statementName, parameterObject);
 	}
-	
+
 	public Map iQueryRow(String statementName,Map parameterObject){
 		List<Map> list = iQueryList(statementName, parameterObject);
 		if(list!=null && list.size()>0){
@@ -352,5 +368,32 @@ public class Dao {
 		}else{
 			return null;
 		}
+	}
+	/**
+	 * 增加分页信息，sql中增加 limit #offset_begin#,#offset_end#
+	 * @param map
+	 * @param pageno
+	 * @param pagesize
+	 * @return
+	 */
+	public Map addPageInfo(Map map,String pageno,String pagesize){
+		int pagesizeInt = 0;
+		int pagenoInt = 0;
+		try{
+			pagesizeInt = new Integer(pagesize);
+		}catch(Exception e){
+			pagesizeInt = 5;
+		}
+		try{
+			pagenoInt = new Integer(pageno);
+		}catch(Exception e){
+			pagenoInt = 1;
+		}
+		int offset_begin = (pagenoInt-1) * pagesizeInt;
+		int offset_end = pagenoInt * pagesizeInt;
+		map.put("offset_begin", offset_begin);
+		map.put("offset_end", offset_end);
+		
+		return map;
 	}
 }

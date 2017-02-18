@@ -2,11 +2,19 @@
 <%@ include  file="../../inc/json_header.inc"%><%
 
 String key_id = req.getParameter("key_id", false);
+String pageno = req.getParameter("pageno", false);
+String pagesize = req.getParameter("pagesize", false);
+
+System.out.println("key_id="+key_id);
+if(key_id!=null && key_id.equals("0")){
+	key_id = "";
+}
+
 //
 Map pp = new HashMap();pp.put("key_id",key_id);
 
 List list_key = dao.queryList("SELECT * FROM td_disc_key t1 WHERE t1.is_deleted='0' AND t1.is_display_header='1'",null);
-
+pp = dao.addPageInfo(pp, pageno, pagesize);
 List list = dao.iQueryList("disc_list",pp);
 Debug.p("list",list);
  
@@ -18,7 +26,7 @@ for(int i=0,j=list.size();i<j;i++){
 	
 	StringBuffer keys = new StringBuffer();
 	for(int ii=0,jj=mll.size();ii<jj;ii++){
-		Map mmll = (Map)mll.get(i);
+		Map mmll = (Map)mll.get(ii);
 		keys.append(" ").append(mmll.get("name"));
 	}
 	ml.put("keys", keys.toString());

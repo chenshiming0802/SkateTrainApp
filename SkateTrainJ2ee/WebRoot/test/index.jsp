@@ -5,6 +5,6 @@
 List list = dao.iQueryList("index_sub",null);
 Debug.p("list",list);
  
-out.println(Json.getString(list,null));
+//out.println(Json.getString(list,null));
 
 %><%@ include  file="../inc/json_footer.inc"%>

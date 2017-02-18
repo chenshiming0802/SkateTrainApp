@@ -38,10 +38,10 @@ public class Json {
 	}
 
 	public static String getString(Map map) {	
-		return getString(map, "yyyy-MM-dd");
+		return getString(map, "yyyy-MM-dd HH:mm:ss");
 	}
 	public static String getString(List list) {	
-		return getString(list, "yyyy-MM-dd");
+		return getString(list, "yyyy-MM-dd HH:mm:ss");
 	}
 	public static String getString(Map map, String format) {
 		JSONObject jsonObject = JSONObject.fromObject(map,
