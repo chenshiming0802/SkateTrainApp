@@ -34,5 +34,13 @@ public class Request {
 		}
 		return value;
 	}
+	
+	public Integer getIntegerParameter(String key,boolean isRequired){
+		try {
+			return new Integer(getParameter(key, isRequired));
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 }

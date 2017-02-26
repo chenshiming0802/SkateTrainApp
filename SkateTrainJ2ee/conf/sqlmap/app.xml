@@ -2,8 +2,32 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
 <sqlMap>
+	<select id="mp3_album" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		  t2.id,
+		  t2.title,
+		  t2.singer,
+		  t2.song_file
+		FROM td_mp3_album_song t1,
+		  v_td_mp3_song t2
+		WHERE t1.is_deleted = '0'
+		    AND t1.song_id = t2.id
+		    AND t1.album_id = #album_id#
+		ORDER BY t1.no desc
+	</select> 
  
-
+	<select id="mp3_list" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		  t.id,
+		  t.title,
+		  small_image,
+		  big_image    
+		FROM v_td_mp3_album t
+		WHERE  t.publish_time &lt; CURRENT_TIMESTAMP
+		ORDER BY t.no desc
+	</select>
 	<select id="index_sub" parameterClass="java.util.HashMap"
 		resultClass="java.util.HashMap">
 		SELECT
@@ -19,7 +43,7 @@
 		WHERE t1.is_deleted = '0'
 		    AND t2.is_deleted = '0'
 		    AND t1.id = t2.course_id
-				ORDER BY t1.no asc
+				ORDER BY t1.no desc
 	</select>
 
 	<select id="disc_list" parameterClass="java.util.HashMap"
@@ -37,7 +61,8 @@
 		WHERE t1.is_deleted = '0'
 		<isNotEmpty prepend="and" property="key_id">
         exists (select 1 from td_disc_article_key b1 where b1.key_id=#key_id# AND t1.id= b1.article_id)
-        </isNotEmpty>           
+        </isNotEmpty>      
+        AND t1.publish_time &lt; CURRENT_TIMESTAMP 
 		ORDER BY t1.publish_time desc
 		limit #offset_begin#,#offset_end#
 	</select>	
