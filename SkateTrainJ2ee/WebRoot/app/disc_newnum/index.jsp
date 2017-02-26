@@ -9,7 +9,7 @@ String mobile_app_id = req.getParameter("mobile_app_id",true);
 List pp = new ArrayList();
 pp.add(mobile_app_id);
  
-String sql = "SELECT COUNT(*) num FROM td_disc_article t WHERE t.publish_time > ( SELECT MAX(a.occure_time) FROM td_user_disc_log a WHERE a.mobile_app_id=?)";
+String sql = "SELECT COUNT(*) num FROM td_disc_article t WHERE t.publish_time > ( SELECT MAX(a.occure_time) FROM td_user_disc_log a WHERE a.mobile_app_id=?) AND t.publish_time < CURRENT_TIMESTAMP ";
 Map ret = dao.getRow(sql,pp);
 out.println(Json.getString(ret)); 
 
