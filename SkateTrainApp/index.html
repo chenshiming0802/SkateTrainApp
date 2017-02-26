@@ -37,7 +37,18 @@
 	height:45px;
 	margin: 0px;
 	padding: 0px;
+}
+.micdownload{
  
+	width: 45px;
+	height:12px;
+	margin: -12px 0px 0px 0px;
+	padding: 0px;
+	font-size: 0.8rem;
+	
+	text-align: center; 
+	font-weight: bold;
+	
 }
 .mic img{
 	width: 26px;
@@ -62,20 +73,22 @@
 	<div class="mui-content" > 
 		<div class="player">
 			<img class="ic_mp3" src="img/ic_mp3.png"/>
+			<div class="title" id="pd"></div><!--播放进度-->&nbsp;&nbsp;
 			<div class="title" id="mp3_title">没有音乐</div>			
 			<div class=" mic" onClick="downloadPage()">
 				<img  src="img/download.png" />
+				<div class="micdownload" id="micdownload"></div>
 			</div>
 			<div class=" mic" onClick="nextPlayer()">
 				<img  src="img/ic_next.png" />
 			</div>
-			<div class=" mic" onClick="pausePlayer()">
+			<div class=" mic ic_pause" onClick="pausePlayer()">
 				<img  src="img/ic_pause.png" />
 			</div>
-			<div class=" mic" onClick="resumePlayer()">
+			<div class=" mic ic_play" onClick="resumePlayer()">
 				<img  src="img/ic_play.png" />
 			</div>
-			<div class=" mic" onClick="previewPlayer()">
+			<div class=" mic " onClick="previewPlayer()">
 				<img  src="img/ic_preview.png" />
 			</div>
 		 
@@ -121,7 +134,7 @@ function plusReady(){
 			}catch(e){			
 		}
 			
-	if(true){
+	if(false){
 
 		clearSkateDownloadedData();  
 		clearSkateDownloadingData();			
@@ -163,7 +176,7 @@ _T.ready(function(){
 	//mui tabs begin
 			var indexSub = "index_sub.html";
 			var subpage_style = {
-				top: "90px",
+				top: "45px",
 				bottom: "51px"
 			};
 			
@@ -192,7 +205,7 @@ _T.ready(function(){
 				if(targetTab=="mp3_list.html"){
 					subpage_style.top = "90px";
 				}else{
-					subpage_style.top = "90px";
+					subpage_style.top = "45px";
 				}
 							
 //				switch(targetTab){
@@ -252,16 +265,16 @@ _T.ready(function(){
 	//mui tabs end
 
 });
-$("#back").click(function(){
-	var wvs=plus.webview.getDisplayWebview();
-	for(var i=0;i<wvs.length;i++){
-		console.log("Display webview "+i+": "+wvs[i].getURL());
-		wvs[i].back();
-	}
-});
+//$("#back").click(function(){
+//	var wvs=plus.webview.getDisplayWebview();
+//	for(var i=0;i<wvs.length;i++){
+//		console.log("Display webview "+i+": "+wvs[i].getURL());
+//		wvs[i].back();
+//	}
+//});
 
 function clickDebug(){
-	alert('hi');
+	//alert('hi');
 };
 
 

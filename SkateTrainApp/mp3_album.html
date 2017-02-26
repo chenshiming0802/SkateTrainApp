@@ -31,11 +31,15 @@
 		position:absolute;
 		right:0.6rem;
 		top:0.6rem;
+	 
+		height: 45px;
 	}
 	.idownload{
 		position:absolute;
 		right:3.6rem;
 		top:0.6rem;
+ 
+		height: 45px;
 	}	
 	.albuminfo{
 		background-color:#929292;
@@ -77,11 +81,11 @@
 				<div class="title">{{sr.album.title}} </div>				
 			</div>
 		</div>
-		<h5 style="background-color:#efeff4;margin-left: 0.8rem;font-size: 1rem;" v-on:click="clickPlayAll"><img src='img/player.png' style="width: 1.2rem">  播放全部</h5>
+		<a style="background-color:#efeff4;margin-left: 12px;height: 1.2rem;line-height: 2rem;" v-on:click="clickPlayAll"><img src='img/player.png' style="width: 26px">  播放全部</a>
 		<ul class="mui-table-view"> 
 			<li class="mui-table-view-cell ilist" v-for="(index,item) in sr.list">
-		        <div class="song_title">{{item.title}}</div>
-		        <div class="song_p">{{item.singer}}</div>
+		        <div class="song_title" v-on:click="clickPlay" index="{{index}}">{{item.title}}</div>
+		        <div class="song_p" v-on:click="clickPlay" index="{{index}}">{{item.singer}}</div>
 		        <div class="iplayer" v-on:click="clickPlay" index="{{index}}"><img src='img/player.png' index="{{index}}"></div>
 		        <div class="idownload" v-on:click="clickDownload" index="{{index}}"><img src='img/download.png' index="{{index}}" v-if="(item.download_flag == 'hasnotdown')"></div>
 				<div class="idownload" index="{{index}}"><img src='img/downloading.gif' index="{{index}}" v-if="(item.download_flag == 'downloading')"></div>
@@ -103,11 +107,12 @@ function getSkateDownloadingData(){
 	var datas = plus.storage.getItem(window._C.DOWNLOADING_FILE) || [];
 	return eval(datas);
 }
+var vue;
 function plusReady(){
 	_T.ready(function(){
 		_T.mui_init();
 		
-		new Vue({
+		vue = new Vue({
 			el:"body",
 			data:{
 				D:window._D,
@@ -116,6 +121,7 @@ function plusReady(){
 				pagesize:10
 			},
 			ready:function(){
+				//alert('ready');
 				var that = this;
 				_T.ajax_json('mp3_album/?album_id='+_T.get('album_id'),function(data){	
 					var ds = getSkateDownloadingData();
@@ -141,6 +147,7 @@ function plusReady(){
 			},		
 			methods:{
 				clickPlay:function(){
+					//alert( plus.webview.currentWebview().id);
 					var that = this;
 					var dom = $(event.target);
 					//var data = [{"id":"1","url":"file/wanna.aac","title":"wanna you"}];
@@ -149,8 +156,10 @@ function plusReady(){
 					//console.log("setMp3List(["+data+"]);startPlayer(0);");
 					var sub = plus.webview.getTopWebview();
 					//var sub = plus.webview.getLaunchWebview();
-					alert(sub.id);
+					//alert(sub.id);
 					sub.evalJS("setMp3List(["+data+"]);startPlayer(0);"); 
+					
+						
 				},
 				clickPlayAll:function(){
 					var that = this;
@@ -176,6 +185,7 @@ function plusReady(){
 //		var sub = plus.webview.getTopWebview();
 //		sub.evalJS("_T.bindBack(\"#back\",\"mp3_list.html\");"); 
 		_T.bindTopViewBack("#back");
+
 	});	
 
 
@@ -185,6 +195,25 @@ if(window.plus){
 	plusReady();
 }else{
 	document.addEventListener("plusready",plusReady,false);
+}
+
+//function refresh(){
+//	vue.ready();
+//}
+function downloadFinish(url){
+ 	console.log(JSON.stringify(vue.sr.list));
+ 	
+	var i ,j;
+	for(i=0,j=vue.sr.list.length;i<j;i++){
+		var uu = vue.sr.list[i].song_file.replaceAll("\\\\","/");
+		console.log("uu+"+uu);
+		console.log("url+"+uu);
+		console.log("------");
+		if(url.indexOf(uu)>=0){
+			vue.sr.list[i].download_flag = "downloaded";
+		}
+	} 
+	console.log(JSON.stringify(vue.sr.list));
 }
 </script>
 </html>
