@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no"> 
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+ 
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<style>
+.album_title{
+	font-size: 0.8rem;
+}
+</style>
+<body class="mp3_list">
+	<!--<header class="mui-bar mui-bar-nav">
+		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
+		<h1 class="mui-title">音乐</h1>
+	</header>		-->
+	<div class="mui-content">			 
+		<!--<div style="height: 45px;"></div>-->
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+			<a class="mui-navigate-right" href="mp3_download_list.html">
+			<span class="mui-badge mui-badge-danger" id="ddnum">等待下载</span>
+				下载的歌曲
+			</a>
+			</li>
+		</ul>
+		<h5 style="background-color:#efeff4;margin-left: 12px;">热门专辑</h5>
+		<ul class="mui-table-view mui-grid-view">	
+			<li class="mui-table-view-cell mui-media mui-col-xs-6" v-for="item in sr.list">
+				<a  v-on:click="clickAlbum" album_id="{{item.id}}"><!--href="mp3_album.html?album_id={{item.id}}"-->
+				<img class="mui-media-object" v-bind:src="D.url_file+item.small_image" album_id="{{item.id}}">
+				<div class="album_title" album_id="{{item.id}}" >{{item.title}}</div></a>
+			</li>		
+		</ul>
+		 
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">  
+
+
+_T.ready(function(){
+	_T.mui_init();
+	
+	new Vue({
+		el:"body",
+		data:{
+			D:window._D,
+			sr:null,
+			pageno:1,
+			pagesize:10
+		},
+		ready:function(){
+			var that = this;
+			_T.ajax_json('mp3_list/',function(data){
+				that.sr = data;
+			});	
+
+		},		
+		methods:{
+			clickAlbum:function(){
+				var that = this;
+				var dom = $(event.target);
+				_T.open({
+				    url:"mp3_album.html?album_id="+dom.attr('album_id'),
+				    id:"mp3_album"
+				});	
+			},
+		}
+	});
+ 	_T.bindBack("#back");
+});	
+
+function plusReady(){
+	var datas = plus.storage.getItem(window._C.DOWNLOADED_FILE) || [];
+	console.log(datas);
+	datas = eval(datas)
+	$("#ddnum").html(datas.length);	
+}
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
+
+</script>
+</html>

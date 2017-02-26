@@ -3,6 +3,10 @@ window._D = window._D||{};
 window._D.app_name = "轮滑教学视频";
 window._D.image_under_construction = "/res/webdocs/images/under_construction.jpg";
 
+window._C = window._C||{};
+window._C.DOWNLOADED_FILE = "DOWNLOADED_FILE";
+window._C.DOWNLOADING_FILE = "DOWNLOADING_FILE";
+
 window._T = {
 	str_click_event :"click",
 	//str_click_event :"tap", 
@@ -14,7 +18,9 @@ window._T = {
 		});
 //		document.write ('<div id="div_qinquan"><a href="mailto:sprcore_server@163.com">本网站所有视频来自网络</a></div>');
 //		document.write ('<div id="div_qinquan_email"><a href="mailto:chenshiming0802@163.com">给我邮件</a>&nbsp('+window._D.app_version+')</div>');
-		document.write ('<div id="div_la" style="text-align:center;font-size:11px;display:none"><script async="true" language="javascript" type="text/javascript" src="http://js.users.51.la/19019486.js"></script></a></div>');
+		if(window._D.debug==false){
+			document.write ('<div id="div_la" style="text-align:center;font-size:11px;display:none"><script async="true" language="javascript" type="text/javascript" src="http://js.users.51.la/19019486.js"></script></a></div>');		
+		}
 	},
 	_addUrlTs:function(url){
 		var timestamp = (new Date()).valueOf();
@@ -38,10 +44,12 @@ window._T = {
 			};
 		}		
 		console.log("ajax#url="+url);
+		console.log("ajax#json="+JSON.stringify(json));
 		mui.ajax(url,json);
 	},
 	ajax_json:function(url,sFunc){
 		var that = this;
+
 		this.ajax(url,{
 			dataType:'json',
 			type:'get',
@@ -57,7 +65,7 @@ window._T = {
 						break;
 					default:
 				}
-				console.log(e);
+			 	console.log(JSON.stringify(e));
 			}
 		});			
 	},
@@ -83,6 +91,10 @@ window._T = {
 			json.statusBarBackground = '#f7f7f7';
 		}
 		var top = "45px";
+	
+		if(json.subpages!=undefined && json.subpages[0].top!=undefined){
+			top = json.subpages[0].top;	
+		}		
 		switch(this.getRongQi()){
 			case "DingTalk":		
 				top = "0px";
@@ -91,7 +103,6 @@ window._T = {
 				$(".mui-bar-nav~.mui-content").css("padding-top","0px");
 				break;
 		}
- 	
 		if(json.subpages!=undefined && json.subpages[0].styles==undefined){
 			json.subpages[0].styles = {
 				top: top,
@@ -132,10 +143,21 @@ window._T = {
    back:function(){
    		mui.back();
    },
-   bindBack:function(jqobjstr){
-   		this.bindtap(jqobjstr,function(){
-   			mui.back();
-   		});
+// bindBack:function(jqobjstr){
+// 		this.bindtap(jqobjstr,function(){
+// 			mui.back();
+// 		});
+// },
+   bindBack:function(jqobjstr,backurl){
+   		if(backurl!=null && backurl!=undefined){
+     		this.bindtap(jqobjstr,function(){
+   				window.location = backurl;
+   			});  			
+   		}else{
+   			this.bindtap(jqobjstr,function(){
+   				mui.back();
+   			});
+   		}
    },
    toast:function(str){
    		//mui.toast(str);
@@ -244,3 +266,7 @@ document.addEventListener( "plusready", function(){
 		});	
 	}, false );
 }, false );
+
+String.prototype.replaceAll = function(s1,s2){ 
+	return this.replace(new RegExp(s1,"gm"),s2); 
+}

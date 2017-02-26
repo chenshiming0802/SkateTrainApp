@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no"> 
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+ 
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<style>
+	.ilist{
+		position:relative;
+	}
+	.song_title{
+		font-size: 1rem;
+	}
+	.song_p{
+		font-size: 0.6rem;
+		color:#c0c0c0;
+	}	
+	.iplayer{
+		position:absolute;
+		right:0.6rem;
+		top:0.6rem;
+	}
+	.idownload{
+		position:absolute;
+		right:3.6rem;
+		top:0.6rem;
+	}	
+
+</style>
+<body class="mp3_list">
+	<div class="mui-content">	
+		<div style="height: 45px;"></div>
+		<h5 style="background-color:#efeff4;margin-left: 12px;" v-on:click="clickPlayAll"><img src='img/player.png' style="width: 0.8rem">  播放全部</h5>
+		<ul class="mui-table-view" id='llobj'>
+			<li class="mui-table-view-cell ilist" v-for="(index,item) in sr">			
+		        <div class="song_title">{{item.title}}d</div>
+		        <div class="song_p">{{item.singer}}</div>
+		        <div class="iplayer" index="{{index}}"><img src='img/player.png' v-on:click="clickPlay" index="{{index}}"></div>
+		        <div class="idownload" index="{{index}}"><img src='img/del.png' v-on:click="clickDel" index="{{index}}"></div>
+			</li>
+		</ul>	
+		<h5 style="background-color:#efeff4;margin-left: 12px;" v-on:click="clearDownloadedList">删除全部文件</h5>
+		
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">  
+
+function plusReady(){
+	
+	_T.ready(function(){
+		_T.mui_init();
+		
+		new Vue({
+			el:"body",
+			data:{
+				D:window._D,
+				sr:null,
+				pageno:1,
+				pagesize:10
+			},
+			ready:function(){
+				var that = this;
+				var datas = plus.storage.getItem(window._C.DOWNLOADED_FILE) || [];
+				that.sr = eval(datas);
+				console.log(JSON.stringify(that.sr));
+			},		
+			methods:{
+				clickDel:function(){
+					var that = this;
+					var dom = $(event.target);
+					
+					var index = dom.attr("index");
+					var data = that.sr[index];
+					that.sr.splice(index,1);
+					plus.storage.setItem(window._C.DOWNLOADED_FILE,JSON.stringify(that.sr));					
+					plus.io.resolveLocalFileSystemURL( data.url, function ( entry ) {
+						entry.remove();
+					}, function ( e ) {
+						console.log( "Update "+item.id+" information failed: "+e.message );
+					} );					
+				},
+				clickPlay:function(){
+					var that = this;
+					var dom = $(event.target);	
+					var index = dom.attr("index");
+					console.log(JSON.stringify(that.sr));
+					var data = JSON.stringify(that.sr[index]);
+					console.log("clickPlay setMp3List("+data+");startPlayer(0);");
+					var sub = plus.webview.getTopWebview();
+					sub.evalJS("setMp3List(["+data+"]);startPlayer(0);"); 
+				},
+				clickPlayAll:function(){
+					var that = this;
+					var dom = $(event.target);				
+					var data = JSON.stringify(that.sr);
+					console.log("clickPlayAll setMp3List("+data+");startPlayer(0);");
+					var sub = plus.webview.getTopWebview();
+					sub.evalJS("setMp3List("+data+");startPlayer(0);");
+				},
+				clearDownloadedList:function(){
+					var that = this;
+					var dom = $(event.target);
+					var sub = plus.webview.getTopWebview();
+					var btnArray = ['取消', '确定'];
+					mui.confirm('请确认是否删除全部文件','操作提示：', btnArray, function(e) {
+						if (e.index == 1) {
+						sub.evalJS("setSkateDownloadedData([]);");   
+						that.sr = [];
+						} 
+					});		
+				}				
+			}
+		});
+
+		var sub = plus.webview.getTopWebview();
+		sub.evalJS("_T.bindBack(\"#back\",\"mp3_list.html\");");  
+	});	
+}
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
+
+</script>
+</html>

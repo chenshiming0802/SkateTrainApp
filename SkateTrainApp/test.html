@@ -14,28 +14,9 @@
     <link href="css/app.css" rel="stylesheet"/>
 </head>
 <style>
-.disc_list .article_img{
-	width: 100px;
-}
-.disc_list .article_title{
-	padding-left: 10px;
-}
-.disc_list .key_str{
-	float: left;
-	line-height: 22px;
-	background-color:#C0C0C0;
-	margin: 5px 0px 5px 10px;
-	padding: 5px 5px 5px 5px;
-} 
-.loadmore{
-	width: 100%;
-	line-height: 80px;
-	text-align: center;
-}
-</style>
+<style>
 <body class="disc_list">
 	<div class="mui-content">	
-		<!--<div class="mui-card"></div>-->
 			<div class="title">
 				<div v-for="item in sr.list_key" class="key_str" v-on:click="clickKeyItem" id_value="{{item.id}}">
 					{{item.name}}
@@ -60,7 +41,6 @@
 </body>
  
 <script type="text/javascript" charset="UTF-8">  
-
 _T.ready(function(){
 	_T.mui_init();
 	
@@ -70,7 +50,7 @@ _T.ready(function(){
 			D:window._D,
 			sr:null,
 			pageno:1,
-			pagesize:10 
+			pagesize:10
 		},
 		ready:function(){
 			var that = this;
@@ -89,40 +69,9 @@ _T.ready(function(){
 					that.sr = data;
 				});			
 			},
-			clickArticleItem:function(){
-				var that = this;
-				var dom = $(event.target);
-		 
-				_T.open({
-					id:"disc_article",
-				    url:"dics_article.html?id="+dom.attr('id_value'),
-				});				
-			},
-			clickLoadMore:function(){
-				var that = this;
-				var dom = $(event.target);
-				var nextpage = that.pageno+1;
-				var key_id = dom.attr('id_value');
-				if(key_id==null && key_id==undefined){
-					key_id = "";
-				}
-				
-				_T.ajax_json('disc_list/?pageno='+nextpage+'&pagesize='+that.pagesize+'&key_id='+key_id,function(data){			
-					if(data.list.length==0){
-						$("#loadmore").html("-- 没有记录了 -- ");
-					}else{
-						console.log(data.list.length);
-						//that.sr.list.push(data.list);
-						that.pageno = nextpage;
-						for(var ii=0,jj=data.list.length;ii<jj;ii++){
-							that.sr.list.push(data.list[ii]);
-						}
-					}
-				});					
-			}
 		}
 	});
- 	_T.bindBack("#back");
+ 
 });	
 
 

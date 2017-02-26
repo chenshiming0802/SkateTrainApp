@@ -7,8 +7,8 @@
 	"id": "H5BDA8EC5",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "轮滑教学视频",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.3.6",/*应用版本名称*/
-		"code": "83" 
+		"name": "1.4.1",/*应用版本名称*/
+		"code": "84" 
 	},
 	"description": "",/*应用描述信息*/
 	"icons": {
@@ -362,11 +362,22 @@
 					"index_sub.html",
 					"js/appdata.js",
 					"js/vue.min.js",
-					"img/load.gif"
+					"img/load.gif",
+					"img/ic_pause.png",
+					"img/ic_preview.png",
+					"img/ic_mp3.png",
+					"img/ic_next.png",
+					"img/ic_play.png",
+					"js/underscore-min.js",
+					"appjs/index.js",
+					"img/download.png",
+					"disc_list.html",
+					"img/player.png",
+					"mp3_list.html"
 				],
 				"refer": [
 					"select_course.html",
-					"disc_list.html"
+					"mp3_player.html"
 				],
 				"priority": 0
 			},
@@ -432,7 +443,8 @@
 					"js/appdata.js",
 					"js/zepto.min.js",
 					"css/mui.min.css",
-					"js/vue.min.js"
+					"js/vue.min.js",
+					"mp3_player.html"
 				],
 				"refer": [
 					"dics_article.html"
@@ -456,6 +468,82 @@
 				"refer": [
 					"dics_article.html"
 				],
+				"priority": 0
+			},
+			"mp3_list.html": {
+				"resources": [
+					"mp3_album.html",
+					"js/app.js",
+					"css/app.css",
+					"js/mui.min.js",
+					"js/appdata.js",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/vue.min.js",
+					"fonts/mui.ttf",
+					"mp3_download_list.html",
+					"mp3_player.html",
+					"disc_list.html"
+				],
+				"refer": [
+					"index_sub.html"
+				],
+				"priority": 0
+			},
+			"mp3_album.html": {
+				"resources": [
+					"img/player.png",
+					"img/download.png",
+					"js/app.js",
+					"css/app.css",
+					"js/mui.min.js",
+					"js/appdata.js",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/vue.min.js",
+					"fonts/mui.ttf",
+					"mp3_player.html",
+					"mp3_list.html",
+					"img/downloading.gif",
+					"img/downloaded.png",
+					"js/underscore-min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"mp3_download_list.html": {
+				"resources": [
+					"img/player.png",
+					"img/downloadal.png",
+					"js/app.js",
+					"css/app.css",
+					"js/mui.min.js",
+					"js/appdata.js",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/vue.min.js",
+					"mp3_list.html",
+					"img/del.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"mp3_player.html": {
+				"resources": [
+					"js/app.js",
+					"css/app.css",
+					"js/mui.min.js",
+					"js/appdata.js",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/vue.min.js",
+					"img/ic_pause.png",
+					"img/ic_preview.png",
+					"img/ic_next.png",
+					"img/ic_mp3.png",
+					"img/ic_play.png"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},

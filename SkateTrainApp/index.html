@@ -10,64 +10,130 @@
     <script src="js/vue.min.js"></script>
     <script src="js/appdata.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="appjs/index.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/app.css" rel="stylesheet"/>
 </head>
 <style>
-.load{
-	width:100%;
-	text-align: center;
+.player{
+	margin:0px 0px 0px 5px;
+	padding: 0px 0px 0px 0px;
+	width: 98%;height: 45px; 
+}
+.player .title {
+	font-size: 1rem;
+	line-height: 45px;
+	float:left;
+}
+.ic_mp3{
+	width: 20px;
+	margin:14px 6px 12px 0px;
+	float:left;
+}
+.mic{
+	float: right;
+	width: 45px;
+	height:45px;
+	margin: 0px;
+	padding: 0px;
+ 
+}
+.mic img{
+	width: 26px;
+	height:26px;
+	margin-top: 8px;
+	margin-left: 8px;
+}
+.ic_pause{
+	display: none; 
+}
+.ddpage{
+	width:100%
 }
 </style>
 <body>
 	<header class="mui-bar mui-bar-nav">
-		<h1 class="mui-title" id='title'>{{D.app_name}}</h1>
+		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
+		<h1 class="mui-title" id="title">{{D.app_name}}</h1>		
+	</div>
 	</header>
+	
 	<div class="mui-content" > 
-		<div class="load"><img src="img/load.gif"></div>
-	</div>	
+		<div class="player">
+			<img class="ic_mp3" src="img/ic_mp3.png"/>
+			<div class="title" id="mp3_title">没有音乐</div>			
+			<div class=" mic" onClick="downloadPage()">
+				<img  src="img/download.png" />
+			</div>
+			<div class=" mic" onClick="nextPlayer()">
+				<img  src="img/ic_next.png" />
+			</div>
+			<div class=" mic" onClick="pausePlayer()">
+				<img  src="img/ic_pause.png" />
+			</div>
+			<div class=" mic" onClick="resumePlayer()">
+				<img  src="img/ic_play.png" />
+			</div>
+			<div class=" mic" onClick="previewPlayer()">
+				<img  src="img/ic_preview.png" />
+			</div>
+		 
+			
+		</div>
+		<div class="ddpage" id="ddpage">					
+		</div>
+		 	
+	
+	</div>
+	
 	<nav class="mui-bar mui-bar-tab">
-		<a id="defaultTab" class="mui-tab-item mui-active" href="index_sub.html">
+		<a id="defaultTab" class="mui-tab-item mui-active" href="#" ehref="index_sub.html">
 			<span class="mui-icon mui-icon-videocam"></span>
 			<span class="mui-tab-label">教学视频</span>
 		</a>
-		<a class="mui-tab-item" href="disc_list.html" >
+		<a class="mui-tab-item" href="#" ehref="disc_list.html" >
 			<span class="mui-icon mui-icon-paperplane" id="d_newnum" ></span>
 			<span class="mui-tab-label" >发现</span>
 		</a>
+		<a class="mui-tab-item" href="#" ehref="mp3_list.html" >
+			<span class="mui-icon mui-icon-settings" id="d_newnum" ></span>
+			<span class="mui-tab-label" >音乐</span>
+		</a>		
 	</nav>	
 </body>
+
+
 <script type="text/javascript" charset="UTF-8">
-//http://192.168.0.3:82/SkateTrainApp/disc_list.html
 var mobile_app_id;
 function plusReady(){
-			try{//发现的红点
+			try{
+				//发现的红点
 				console.log("plusReady=");
 				mobile_app_id = plus.device.uuid;
 				console.log("mobile_app_id="+mobile_app_id);
-				_T.ajax_json('disc_newnum/?mobile_app_id='+mobile_app_id,function(data){
+				_T.ajax_json("disc_newnum/?mobile_app_id="+mobile_app_id,function(data){
 					console.log(data);
 					if(parseInt(data.num)>0){
 						$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
 					}
-				});			 		
-			}catch(e){}
+				});		
+			}catch(e){			
+		}
+			
+	if(true){
+
+		clearSkateDownloadedData();  
+		clearSkateDownloadingData();			
+		alert("debug bgein");
+
+		
+	}
+			
 }
-if(window.plus){
-	plusReady();
-}else{
-	document.addEventListener("plusready",plusReady,false);
-}
+
+var activeTab;
 _T.ready(function(){
-	_T.mui_init({
-		subpages: [{
-			id: 'index_sub',
-			url: 'index_sub.html',
-			bottom: '51px'
-		}]
-	});
- 
-	
 	new Vue({
 		el:"body",
 		data:{
@@ -79,20 +145,26 @@ _T.ready(function(){
 
 		},	
 		methods:{
- 
+ 			clear_downloadingline:function(){
+				var that = this;
+				var dom = $(event.target); 
+				clearSkateDownloadingData();
+				displayDownloadList(true);
+			}
 		}
 	});
 	
+	//自动更新
 	mui.os.plus && !mui.os.stream && mui.plusReady(function(){
 		_T.app_update();
 	});	
 	
-	
+ 
 	//mui tabs begin
-			var subpages = ['index_sub.html', 'disc_list.html'];
+			var indexSub = "index_sub.html";
 			var subpage_style = {
-				top: '45px',
-				bottom: '51px'
+				top: "90px",
+				bottom: "51px"
 			};
 			
 			var aniShow = {};
@@ -100,76 +172,105 @@ _T.ready(function(){
 			 //创建子页面，首个选项卡页面显示，其它均隐藏；
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
-				for (var i = 0; i < subpages.length; i++) {
-					var temp = {};
-					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-					if (i > 0) {
-						sub.hide();
-					}else{
-						temp[subpages[i]] = "true";
-						mui.extend(aniShow,temp);
-					}
-					self.append(sub);
-				}
+				var sub = plus.webview.create(indexSub,indexSub, subpage_style);			
+				self.append(sub);
 			});
 			 //当前激活选项
-			var activeTab = subpages[0];
+			//var activeTab = subpages[0];
+			activeTab = indexSub;
 			var title = document.getElementById("title");
 			 //选项卡点击事件
-			mui('.mui-bar-tab').on('tap', 'a', function(e) {
-				var targetTab = this.getAttribute('href');
-				if (targetTab == activeTab) {
-					return;
-				} 
+			mui(".mui-bar-tab").on("tap", "a", function(e) {
+				var targetTab = this.getAttribute("ehref");
+ 				if(targetTab==activeTab){
+ 					return;
+ 				}
 				
 				//更换标题
-				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
-
-		 		
-				//显示目标选项卡
-				//若为iOS平台或非首次显示，则直接显示
-				if(mui.os.ios||aniShow[targetTab]){
-					plus.webview.show(targetTab);
-				}else{
-					//否则，使用fade-in动画，且保存变量
-					var temp = {};
-					temp[targetTab] = "true";
-					mui.extend(aniShow,temp);
-					plus.webview.show(targetTab,"fade-in",300);
-				}
-				//隐藏当前;
-				plus.webview.hide(activeTab);
+				title.innerHTML = this.querySelector(".mui-tab-label").innerHTML;
 				
-		 		
-		 		if(targetTab=='disc_list.html'){
+				if(targetTab=="mp3_list.html"){
+					subpage_style.top = "90px";
+				}else{
+					subpage_style.top = "90px";
+				}
+							
+//				switch(targetTab){
+//					default:
+//						var twv = plus.webview.getWebviewById(targetTab);
+//						if(twv==null || twv==undefined){
+//							var self = plus.webview.currentWebview();
+//							var sub = plus.webview.create(targetTab, targetTab, subpage_style);
+//							self.append(sub);		 	
+//						}else{
+//							twv.show();
+//						}										
+//				}
+				var twv = plus.webview.getWebviewById(targetTab);
+				if(twv==null || twv==undefined){
+					var self = plus.webview.currentWebview();
+					var sub = plus.webview.create(targetTab, targetTab, subpage_style);
+					self.append(sub);		 	
+				}else{
+					twv.show();
+				}				
+
+				var awv = plus.webview.getWebviewById(activeTab);
+				if(awv!=null && awv!=undefined){
+					awv.close();
+				}
+				
+				
+		 		//发现的红点
+		 		if(targetTab=="disc_list.html"){
 					$("#d_newnum").html("");	  
-					try{//发现的红点
+					try{
 						//var mobile_app_id = plus.runtime.appid;
 						console.log("mobile_app_id 2="+mobile_app_id);
-						_T.ajax_json('td_user_disc_log_add/?mobile_app_id='+mobile_app_id,function(data){
+						_T.ajax_json("td_user_disc_log_add/?mobile_app_id="+mobile_app_id,function(data){
 							if(parseInt(data.num)>0){
 								$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
 							}
 						});						
 					}catch(e){}		 			
-		 		}				
-				
+		 		}							
 				//更改当前活跃的选项卡
 				activeTab = targetTab;
 			});
 			 //自定义事件，模拟点击“首页选项卡”
-			document.addEventListener('gohome', function() {
+			document.addEventListener("gohome", function() {
 				var defaultTab = document.getElementById("defaultTab");
 				//模拟首页点击
-				mui.trigger(defaultTab, 'tap');
+				mui.trigger(defaultTab, "tap");
 				//切换选项卡高亮
 				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
 				if (defaultTab !== current) {
-					current.classList.remove('mui-active');
-					defaultTab.classList.add('mui-active');
+					current.classList.remove("mui-active");
+					defaultTab.classList.add("mui-active");
 				}
 			});	
 	//mui tabs end
+
 });
+$("#back").click(function(){
+	var wvs=plus.webview.getDisplayWebview();
+	for(var i=0;i<wvs.length;i++){
+		console.log("Display webview "+i+": "+wvs[i].getURL());
+		wvs[i].back();
+	}
+});
+
+function clickDebug(){
+	alert('hi');
+};
+
+
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
+
+
 </script>
 </html>
