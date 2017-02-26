@@ -81,13 +81,16 @@ function plusReady(){
 					
 					var index = dom.attr("index");
 					var data = that.sr[index];
-					that.sr.splice(index,1);
-					plus.storage.setItem(window._C.DOWNLOADED_FILE,JSON.stringify(that.sr));					
-					plus.io.resolveLocalFileSystemURL( data.url, function ( entry ) {
-						entry.remove();
-					}, function ( e ) {
-						console.log( "Update "+item.id+" information failed: "+e.message );
-					} );					
+					var btnArray = ['取消', '确定'];
+					mui.confirm('请确认是否删除文件','操作提示：', btnArray, function(e) {		
+						that.sr.splice(index,1);
+						plus.storage.setItem(window._C.DOWNLOADED_FILE,JSON.stringify(that.sr));					
+						plus.io.resolveLocalFileSystemURL( data.url, function ( entry ) {
+							entry.remove();
+						}, function ( e ) {
+							console.log( "Update "+item.id+" information failed: "+e.message );
+						} );	
+					});
 				},
 				clickPlay:function(){
 					var that = this;
@@ -122,8 +125,9 @@ function plusReady(){
 			}
 		});
 
-		var sub = plus.webview.getTopWebview();
-		sub.evalJS("_T.bindBack(\"#back\",\"mp3_list.html\");");  
+//		var sub = plus.webview.getTopWebview();
+//		sub.evalJS("_T.bindBack(\"#back\",\"mp3_list.html\");"); 
+		_T.bindTopViewBack("#back");
 	});	
 }
 if(window.plus){

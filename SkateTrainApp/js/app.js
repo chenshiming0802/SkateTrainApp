@@ -148,7 +148,20 @@ window._T = {
 // 			mui.back();
 // 		});
 // },
-   bindBack:function(jqobjstr,backurl){
+	/*绑定父窗口的返回*/
+	bindTopViewBack:function(jqobjstr){
+		var sub = plus.webview.getTopWebview();
+		var self = plus.webview.currentWebview();
+		self.eval("_T._bindBackBySelfId(\""+jqobjstr+"\",\""+self.id+"\");");
+	},
+	/*用于子窗口调用父窗口的返回，给bindTopViewBack方法使用*/
+   	_bindBackBySelfId:function(jqobjstr,selfid){
+   		this.bindtap(jqobjstr,function(){
+   			var wv = plus.webview.getWebviewById( selfid );
+   			wv.evalJS("mui.back()");
+   		});
+   	},	
+   	bindBack:function(jqobjstr,backurl){
    		if(backurl!=null && backurl!=undefined){
      		this.bindtap(jqobjstr,function(){
    				window.location = backurl;
