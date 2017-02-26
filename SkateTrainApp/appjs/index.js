@@ -10,11 +10,12 @@ function setMp3List(datas){
 function startPlayer(i){
 	if(mp3list.length>0){
 		var index = i % mp3list.length;
-		$("#mp3_title").html(mp3list[index].title);
+		$("#mp3_title").html("&nbsp;&nbsp;"+mp3list[index].title);
 		if(player!=undefined){
 			player.stop();	
 			player = null;
 		}
+		mui.toast("开始播放 "+mp3list[index].title,{ duration:'long', type:'div' });
 		var song_url = window._D.url_file+mp3list[index].song_file;
 		//console.log(window._D.url_file+mp3list[index].song_file);
 		
@@ -40,38 +41,59 @@ function startPlayer(i){
 			}			
 		}
 		console.log("play:="+isLocal+"/"+song_url);
-		if(isLocal==true){
-			console.log("TODO-播放本地音乐");
-//			plus.io.requestFileSystem( plus.io.PUBLIC_DOWNLOADS, function(fs){				
-//				alert(fs.fullPath);
-//				alert(song_url);
-//			} );			
-			player = plus.audio.createPlayer(song_url);
-			player.play( function () {
-				//alert( "Audio play success!" ); 
-				nextPlayer();		
-			}, function ( e ) { 
-				alert( "Audio play error: " + e.message ); 
-			} );
-			$('.ic_play').hide();
-			$('.ic_pause').show();		
-		}else{	
-			player = plus.audio.createPlayer(song_url);
-			player.play( function () {
-				//alert( "Audio play success!" ); 
-				nextPlayer();		
-			}, function ( e ) { 
-				alert( "Audio play error: " + e.message ); 
-			} );
-			$('.ic_play').hide();
-			$('.ic_pause').show();				
-		}
-		
-	
+		player = plus.audio.createPlayer(song_url);
+		player.play( function () {
+			//alert( "Audio play success!" ); 
+			nextPlayer();		
+		}, function ( e ) { 
+			alert( "Audio play error: " + e.message ); 
+		} );
+		$('.ic_play').hide();
+		$('.ic_pause').show();	
 			
 		currentIndex = index;
+		//显示播放时间
+		var d = player.getDuration();// 获取总时长
+		pt = document.getElementById("pd");
+		if ( !d ) {
+			pt.innerText = "00:00/"+timeToStr(d);
+		}		
+		pi = setInterval( function () {
+			if ( !d ) { // 兼容无法及时获取总时长的情况
+				d = player.getDuration();
+			}
+			var c = player.getPosition();
+			if ( !c ) {  // 兼容无法及时获取当前播放位置的情况
+				return;
+			}
+			pt.innerText = timeToStr(c)+"/"+timeToStr(d);
+//			var pct = Math.round(c/d);
+//			if ( pct < 8 ) {
+//				pct = 8;
+//			}
+//			ps.style.width = pct+"px";
+		}, 1000 );		
 	}
 }
+// 格式化时长字符串，格式为"HH:MM:SS"
+timeToStr=function(ts){
+	if(isNaN(ts)){
+		return "--:--";
+	}
+	var h=parseInt(ts/3600);
+	var m=parseInt((ts%3600)/60);
+	var s=parseInt(ts%60);
+	return (ultZeroize(m)+":"+ultZeroize(s));
+};
+ultZeroize=function(v,l){
+	var z="";
+	l=l||2;
+	v=String(v);
+	for(var i=0;i<l-v.length;i++){
+		z+="0";
+	}
+	return z+v;
+};
 function pausePlayer(){
 	if(player!=undefined){
 		player.pause();
@@ -165,6 +187,8 @@ function addDownloadSongTask(datas){
 	
 
 	setSkateDownloadingData(ds);
+	$("#micdownload").html(ds.length);
+	mui.toast("添加下载任务",{ duration:'long', type:'div' }) 
 	console.log("downloadSong"+ds.length+"/"+ds1.length+"="+JSON.stringify(ds));
 }
 //下载歌曲
@@ -187,12 +211,21 @@ function downloadSong(){
 			if ( status == 200 ) { 
 				ds[index].download_filename = d.filename;
 				//下载成功后，下载文件从待下载列表删除,加入到已下载列表中,
-				addSkateDownloadedData(ds[index]);				
-				setSkateDownloadingData(removeFromArray(ds,index));
+				addSkateDownloadedData(ds[index]);	
+				var nds = removeFromArray(ds,index);
+				setSkateDownloadingData(nds);
 				console.log(JSON.stringify(getSkateDownloadingData()));		
 				console.log(JSON.stringify(getSkateDownloadedData()));	
 				displayDownloadList();
 				downloadSong();
+				$("#micdownload").html(nds.length);
+				mui.toast(ds[index].title+" 下载完成",{ duration:'long', type:'div' });
+				
+				//var dsin_json = JSON.stringify(ds[index]);
+				//lert(dsin_json);
+				var vw = plus.webview.getWebviewById( "mp3_list.html" );
+				vw.evalJS("downloadFinish(\""+url+"\")"); 
+				//vw.evalJS("refresh()");
 			} else {
 				ds[index].is_download_finish = "-1";
 				setSkateDownloadingData(ds); 
@@ -274,6 +307,10 @@ function downloadPage(){
 		displayDownloadList();
 		
 		vv.hide();
+		//_T.bindBack("#back","mp3_list.html");
+		_T.bindBackFunc("#back",function(){
+			downloadPage(false);
+		});
 	}else{
 		isDisplayDownloadPage = false;
 		displayDownloadList();
