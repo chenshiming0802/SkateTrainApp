@@ -48,15 +48,15 @@ function startPlayer(i){
 		}, function ( e ) { 
 			alert( "Audio play error: " + e.message ); 
 		} );
-		$('.ic_play').hide();
-		$('.ic_pause').show();	
+		$('.ic_play').css("display","none");
+		$('.ic_pause').css("display","table-cell");
 			
 		currentIndex = index;
 		//显示播放时间
 		var d = player.getDuration();// 获取总时长
 		pt = document.getElementById("pd");
 		if ( !d ) {
-			pt.innerText = "00:00/"+timeToStr(d);
+			pt.innerText = "00:00";//+timeToStr(d)
 		}		
 		pi = setInterval( function () {
 			if ( !d ) { // 兼容无法及时获取总时长的情况
@@ -66,12 +66,9 @@ function startPlayer(i){
 			if ( !c ) {  // 兼容无法及时获取当前播放位置的情况
 				return;
 			}
-			pt.innerText = timeToStr(c)+"/"+timeToStr(d);
-//			var pct = Math.round(c/d);
-//			if ( pct < 8 ) {
-//				pct = 8;
-//			}
-//			ps.style.width = pct+"px";
+			pt.innerText = timeToStr(c);//+"/"+timeToStr(d)
+			var pp = c/d*100;
+			mui("#demo1").progressbar({progress:pp}).show();
 		}, 1000 );		
 	}
 }
@@ -96,16 +93,16 @@ ultZeroize=function(v,l){
 };
 function pausePlayer(){
 	if(player!=undefined){
-		player.pause();
-		$('.ic_play').show()
-		$('.ic_pause').hide();
+		player.pause(); 
+		$('.ic_pause').css("display","none");
+		$('.ic_play').css("display","table-cell");		
 	}
 }
 function resumePlayer(){
 	if(player!=undefined){
 		player.resume();
-		$('.ic_play').hide();
-		$('.ic_pause').show();		
+		$('.ic_play').css("display","none");
+		$('.ic_pause').css("display","table-cell");			
 	}	
 }
 function nextPlayer(){
@@ -309,7 +306,8 @@ function downloadPage(){
 		vv.hide();
 		//_T.bindBack("#back","mp3_list.html");
 		_T.bindBackFunc("#back",function(){
-			downloadPage(false);
+			isDisplayDownloadPage = true;
+			downloadPage();
 		});
 	}else{
 		isDisplayDownloadPage = false;

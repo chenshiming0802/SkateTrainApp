@@ -7,6 +7,8 @@ window._C = window._C||{};
 window._C.DOWNLOADED_FILE = "DOWNLOADED_FILE";
 window._C.DOWNLOADING_FILE = "DOWNLOADING_FILE";
 
+window._D.image_file = window._D.url_file + "_images"; 
+
 window._T = {
 	str_click_event :"click",
 	//str_click_event :"tap", 
@@ -29,7 +31,7 @@ window._T = {
 		}else{
 			url += "?";
 		}
-		return url+"_ts="+timestamp;
+		return url+"_ts="+timestamp;  
 	},
 	ajax:function(url,json){
 		url = _D.base_url +"app/"+url;
@@ -187,7 +189,8 @@ window._T = {
    //如果中版本为全量更新，小版本为增量更新
 	app_update:function() {
 		var that = this;
-		var url = window._D.base_url+"service/update/"; 
+		var baseinfo = "http://114.55.110.94:8080/SkateTrainWar/";
+		var url = baseinfo+"service/update/"; 
 		console.log("SYS_VERSION_CHECK="+url);
 		
 	    plus.runtime.getProperty(plus.runtime.appid,function(inf){
@@ -263,11 +266,20 @@ window._T = {
 			    },function(e){
 			        console.log("安装wgt文件失败["+e.code+"]："+e.message);
 			    });	            
-	        } else {
+	       } else {
 	            console.log("下载wgt失败！");
 	        }
 	    }).start();		
-	}
+	},
+	parseHtml:function(str){
+		if(str=="" || str==null || str==undefined){
+			return "";
+		}
+		var str = str.replaceAll("\\[\\[img:([0-9a-zA-Z_\\.\\\\]*)\\]\\]","<img class='html_img' src='"+window._D.image_file+"$1'/>");
+		var text_blank = "&nbsp;&nbsp;&nbsp;&nbsp;";
+		str = str.replaceAll("\n","<BR>"+text_blank);
+		return str;
+	},
 };
 
 

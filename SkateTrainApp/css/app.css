@@ -2,6 +2,9 @@ body{
 	font-family:"微软雅黑";	
 	font-size: 20px;
 }
+.html_img{
+	width:100%
+}
 /*
 header{
 	height:0px;
@@ -210,47 +213,7 @@ header .noHeader{
 	margin: 0px 10px 10px 0px;
 }
 /*-----*/
-.course_event_sub .film{
-	width: 100%;
- 	position: fixed;
- 	z-index: 1;
-}
-.course_event_sub .content{
-	padding: 10px;
-	z-index: 999;
-}
-.course_event_sub .title{
-	font-size: 1rem;
-	line-height: 1.5rem;
-	font-weight: bold;
-}
-.course_event_sub .title{
-	font-size: 1rem;
-	line-height: 2rem;
-}
-.course_event_sub .p1,.p2,.p3{
-	font-size: 0.8em;
-	line-height: 1.2rem;
-}
-.course_event_sub .list{
-	margin-top: 10px;
-}
-.course_event_sub .list .item{
-	position: relative;
-    display: table;
-    margin-bottom: 10px;
-}
-.course_event_sub .list .item .img{
-	width:100px;
-    display: table-cell;
-    margin-right: 10px;
-}
-.course_event_sub .list .item .img_title{
-	font-size: 0.8rem;
-    display: table-cell;
- 	vertical-align: top;
- 	
-}
+
 /*-----*/
 .select_courese_sub .courselist .item{
 	position:relative;
