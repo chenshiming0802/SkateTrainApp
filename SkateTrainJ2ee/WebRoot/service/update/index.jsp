@@ -3,7 +3,7 @@
 //String SERVER_URL = "http://192.168.0.3:82/";
 String SERVER_URL="http://114.55.110.94/SkateTrainFile/release/";
 
-String SYS_VERSION = "1.4.1";
+String SYS_VERSION = "1.4.5";
 String note = "    ";
 
 String SYS_APPNAME = "SkateTrainApp";

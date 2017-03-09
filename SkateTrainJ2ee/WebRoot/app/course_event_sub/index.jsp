@@ -6,8 +6,8 @@ String course_event_id = req.getParameter("course_event_id",true);
 
 Map model = dao.getTableRowById("td_course_daily_event", new Integer(course_event_id));
 model.put("film",dao.getTableRowById("td_file", (Integer)model.get("film_file_id")));
-model.put("smallpic_file_file",MapUtils.get(dao.getTableRowById("td_file", (Integer)model.get("smallpic_file_id")), "file_path"));
-
+//model.put("smallpic_file_file",MapUtils.get(dao.getTableRowById("td_file", (Integer)model.get("smallpic_file_id")), "file_path"));
+model.put("smallpic_file_file",model.get("smallpic_file"));
 //td_event_point
 String sql = "SELECT t.*,(SELECT a.file_path FROM td_file a WHERE t.img_file_id=a.id AND a.is_deleted='0') img_file FROM td_event_point t WHERE t.is_deleted='0' and t.event_id=?";
 List list = dao.queryList(sql,ListUtils.getList(new Integer(course_event_id)) );

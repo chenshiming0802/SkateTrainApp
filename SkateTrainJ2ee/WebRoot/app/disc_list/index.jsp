@@ -27,7 +27,7 @@ for(int i=0,j=list.size();i<j;i++){
 	StringBuffer keys = new StringBuffer();
 	for(int ii=0,jj=mll.size();ii<jj;ii++){
 		Map mmll = (Map)mll.get(ii);
-		keys.append(" ").append(mmll.get("name"));
+		keys.append(mmll.get("name")).append(" ");
 	}
 	ml.put("keys", keys.toString());
 }
