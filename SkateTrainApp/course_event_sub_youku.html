@@ -25,15 +25,54 @@
 	</header>
 <style>
 	#download{
-	color: white;position: fixed;bottom: 0px;width: 100%;text-align: center;
-	font-size: 1.2rem;
-	line-height: 2.4rem;
-	display:block;
-	background-color: red;
+		color: white;position: fixed;bottom: 0px;width: 100%;text-align: center;
+		font-size: 1.2rem;
+		line-height: 2.4rem;
+		display:block;
+		background-color: red;
 	}
 	.bb{
-		line-height: 25px;
+		font-size: 1rem;
+		line-height: 1.8rem;	
 	}
+.film{
+	width: 100%;
+ 	position: fixed;
+ 	z-index: 1;
+}
+.content{
+	padding: 10px;
+	z-index: 999;
+}
+.title{
+	font-size: 1rem;
+	line-height: 1.5rem;
+	font-weight: bold;
+}
+.title{
+	font-size: 1rem;
+	line-height: 2rem;
+}
+ 
+.list{
+	margin-top: 10px;
+}
+.list .item{
+	position: relative;
+    display: table;
+    margin-bottom: 10px;
+}
+.list .item .img{
+	width:100px;
+    display: table-cell;
+    margin-right: 10px;
+}
+.list .item .img_title{
+	font-size: 0.8rem;
+    display: table-cell;
+ 	vertical-align: top;
+ 	
+}	
 </style>	
 <!--<base href="http://www.youku.com"/>	-->
 <body class="course_event_sub" id='course_event_sub'>
@@ -53,8 +92,8 @@
                 <div class="p1"><b>难度系数：</b>  {{sr.model.degree_diff}}</div>	
 				<div class="p2"><b>训练要求：</b>  {{sr.model.num_demand}}</div>	
                -->
-				<div class="p3"><b>动作要点：</b></div>	
-				<div class='bb'>&nbsp;&nbsp;&nbsp;&nbsp;{{sr.model.body}}</div>
+
+				<div class='bb'>&nbsp;&nbsp;&nbsp;&nbsp;{{{sr.model.body}}}</div>
 				<div class="list" id="listobj">
 					<div class="item" v-for="item in sr.list" id='i_{{$index}}'>
 						<img v-bind:src="D.url_file+item.img_file" class="img" data-preview-src="" data-preview-group="1" v-bind:beginsec="item.begin_seconds" v-bind:endsec="item.end_seconds" v-on:click="clickImg"> 
@@ -100,11 +139,12 @@ _T.ready(function(){
 		ready:function(){
 			var that = this;
 			_T.ajax_json('course_event_sub/?course_event_id='+_T.get('course_event_id'),function(data){
-			//_T.ajax_json('course_event_sub?course_event_id='+_T.get('course_event_id'),function(data){	
+			//_T.ajax_json('course_event_sub?course_event_id='+_T.get('course_event_id'),function(data){
 				that.sr = data;
+				that.sr.model.body = _T.parseHtml(that.sr.model.body);
 				//$("#filmsource").attr("src",_D.url_file+data.model.film_file);
 				console.log(_D.url_file+data.model.film_file);
-				//console.log(data.model.film.file_type);
+				console.log(data.model.film.file_path);
 			
 				player = new YKU.Player('file_div',{
 					styleid: '0',

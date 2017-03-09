@@ -14,67 +14,91 @@
     <link href="css/app.css" rel="stylesheet"/>
 </head>
 <style>
-	.ilist{
-		position:relative;
-	}
-	.song_title{
-		font-size: 1rem;
-	}
-	.song_p{
-		font-size: 0.6rem;
-		color:#c0c0c0;
-	}	
-	.iplayer{
-		position:absolute;
-		right:0.6rem;
-		top:0.6rem;
-		height: 45px;		
-	}
-	.idownload{
-		position:absolute;
-		right:3.6rem;
-		top:0.6rem;
+	.ilist_l{
+		float:left;	
 
-	}	
+	}
+		.song_title{
+			font-size: 1rem;
+			line-height: 1.5rem;
 
+		}
+		.song_p{
+			font-size: 0.6rem;
+			line-height: 0.6rem;
+		}
+	.ilist_r{
+		float:right;
+	}
+ 
+
+
+	.playallbar{
+		display:table;
+	}
+	.wrap{
+		display:table-cell;
+		vertical-align:middle;
+	}
+	.playallbar img{
+		float:left;
+		padding-left: 10px;
+	}
+	.playall{
+		float:left;
+		font-size:1rem;
+		line-height: 2rem;
+	}
+	.mcount{
+		float:left;
+		font-size:0.7rem;
+		line-height: 2rem;	
+		padding-left: 10px;	
+	}
 </style>
 <body class="mp3_list">
 	<div class="mui-content">	
-		<div style="height: 45px;"></div>
-		<a style="background-color:#efeff4;margin-left: 12px;height: 1.2rem;line-height: 2rem;" v-on:click="clickPlayAll"><img src='img/player.png' style="width: 26px">  播放全部</a>
+		<div class="playallbar" v-on:click="clickPlayAll">
+			<div class="wrap">
+				<img src='img/player.png'  v-on:click="clickPlayAll">  
+				<div class="playall" v-on:click="clickPlayAll">播放全部</div>		
+				<div class="mcount">(共{{size}}首歌曲)</div>
+			</div>
+		</div>
 		<ul class="mui-table-view" id='llobj'>
 			<li class="mui-table-view-cell ilist" v-for="(index,item) in sr">			
-		        <div class="song_title"  v-on:click="clickPlay" index="{{index}}">{{item.title}}d</div>
-		        <div class="song_p"  v-on:click="clickPlay" index="{{index}}">{{item.singer}}</div>
-		        <div class="iplayer" index="{{index}}"><img src='img/player.png' v-on:click="clickPlay" index="{{index}}"></div>
-		        <div class="idownload" index="{{index}}"><img src='img/del.png' v-on:click="clickDel" index="{{index}}"></div>
+				<div class="ilist_l">
+			        <div class="song_title" v-on:click="clickPlay" index="{{index}}">{{item.title}}</div>
+			        <div class="song_p" v-on:click="clickPlay" index="{{index}}">{{item.singer}}</div>					
+				</div>
+				<div class="ilist_r">
+		       	 <div class="idownload" index="{{index}}"><img src='img/del.png' v-on:click="clickDel" index="{{index}}"></div>
+		       </div>
 			</li>
 		</ul>	
-		<h5 style="background-color:#efeff4;margin-left: 12px;" v-on:click="clearDownloadedList">删除全部文件</h5>
+		<h5 style="background-color:#efeff4;margin-right: 12px;font-size: 1rem;line-height: 1.5rem;text-align: right;" v-on:click="clearDownloadedList">删除全部文件</h5>
 		
 	</div>	
 </body>
  
 <script type="text/javascript" charset="UTF-8">  
 
-function plusReady(){
-	
+var vue;	
 	_T.ready(function(){
 		_T.mui_init();
 		
-		new Vue({
+		vue = new Vue({
 			el:"body",
 			data:{
 				D:window._D,
 				sr:null,
+				size:0,
 				pageno:1,
 				pagesize:10
 			},
 			ready:function(){
 				var that = this;
-				var datas = plus.storage.getItem(window._C.DOWNLOADED_FILE) || [];
-				that.sr = eval(datas);
-				console.log(JSON.stringify(that.sr));
+
 			},		
 			methods:{
 				clickDel:function(){
@@ -131,8 +155,17 @@ function plusReady(){
 
 //		var sub = plus.webview.getTopWebview();
 //		sub.evalJS("_T.bindBack(\"#back\",\"mp3_list.html\");"); 
-		_T.bindTopViewBack("#back");
+		
 	});	
+function plusReady(){
+	var that = vue;		
+	var datas = plus.storage.getItem(window._C.DOWNLOADED_FILE) || [];
+	that.sr = eval(datas);
+	that.size = that.sr.length; 
+
+	console.log(JSON.stringify(that.sr));	 
+	
+	_T.bindTopViewBack("#back");
 }
 if(window.plus){
 	plusReady();

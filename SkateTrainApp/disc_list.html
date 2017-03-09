@@ -22,15 +22,100 @@
 }
 .disc_list .key_str{
 	float: left;
-	line-height: 22px;
 	background-color:#C0C0C0;
 	margin: 5px 0px 5px 10px;
 	padding: 5px 5px 5px 5px;
+	font-size: 1rem;
 } 
 .loadmore{
 	width: 100%;
 	line-height: 80px;
 	text-align: center;
+}
+
+.item_1s{
+	position: relative;
+}
+.item_1s .l{
+	width: 67%;
+	float: left;
+}
+.item_1s .r{
+	width: 33%;
+	float: right;
+}
+.item_1s .title{
+	width: 100%;
+	font-size: 1rem;
+	font-weight: bold;
+	line-height: 1.8rem;
+	padding-right: 5px;
+}
+.item_1s .label{
+	width: 100%;
+	font-size: 0.8rem;
+	line-height: 1.5rem;
+}
+.item_1s .img{
+	width:100%;
+	padding: 0px;margin: 0px;
+}
+
+.item_1b{
+	position: relative;
+}
+.item_1b .title{
+	float:left;
+	width: 100%;
+	font-size: 1rem;
+	font-weight: bold;	
+	line-height: 1.8rem;
+}
+.item_1b .label{
+	float:left;
+	width: 66%;
+	font-size: 0.8rem;
+	line-height: 1.5rem;
+}
+.item_1b .img{
+	width:100%;
+	padding: 0px;margin: 0px;
+}
+
+.item_3{
+	position: relative;
+}
+.item_3 .title{
+	float:left;
+	width: 100%;
+	font-size: 1rem; 
+	font-weight: bold;	   
+	line-height: 1.8rem;
+} 
+.item_3 .label{
+	float:left;
+	width: 66%;
+	font-size: 0.8rem;
+	line-height: 1.5rem;
+}  
+.item_3 .img_d{
+	width:100%;
+	padding: 0px;margin: 0px;
+	text-align: center;
+}
+.item_3 .img{
+	width: 33%;
+}
+.img_l{
+	float:left;
+}
+.img_r{
+	float:right
+}
+.img{
+	-webkit-border-radius: 4px; 
+	-moz-border-radius: 4px; 
+	border-radius: 4px; 
 }
 </style>
 <body class="disc_list">
@@ -44,15 +129,32 @@
 			<div class="clear"></div>
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media"  v-for="item in sr.list">
-					<a href="javascript:;" v-on:click="clickArticleItem" id_value="{{item.id}}">
-						<img class="article_img mui-pull-left" v-bind:src="D.url_file+item.small_file_path"  id_value="{{item.id}}">
-						<div class="article_title mui-media-body"  id_value="{{item.id}}">
-							{{item.title}}
-							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.keys}}</p>
-							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.publish_time}}</p>
+					<div class="item item_1s" v-if="item.list_type=='1s'" v-on:click="clickArticleItem" id_value="{{item.id}}">			
+						<div class="l">
+							<div class="title" id_value="{{item.id}}">{{item.title}}</div>
+							<div class="label" id_value="{{item.id}}">{{item.keys}}</div>
 						</div>
-					</a>
-				</li>
+						<div class="r">
+							<img class="img" v-bind:src="D.image_file+item.small_img_1"  id_value="{{item.id}}"/>
+						</div>
+					</div>
+					
+					<div class="item item_1b" v-if="item.list_type=='1b'" v-on:click="clickArticleItem" id_value="{{item.id}}">
+						<div class="title" id_value="{{item.id}}">{{item.title}}</div>
+						<img class="img" v-bind:src="D.image_file+item.small_img_1" id_value="{{item.id}}"/>
+						<div class="label" id_value="{{item.id}}">{{item.keys}}</div>
+					</div>
+					
+					<div class="item item_3"  v-if="item.list_type== '3'" v-on:click="clickArticleItem" id_value="{{item.id}}">
+						<div class="title" id_value="{{item.id}}">{{item.title}}</div>
+						<div class="img_d">
+							<img class="img img_l" v-bind:src="D.image_file+item.small_img_1" id_value="{{item.id}}"/>
+							<img class="img" v-bind:src="D.image_file+item.small_img_2" id_value="{{item.id}}"/>
+							<img class="img img_r" v-bind:src="D.image_file+item.small_img_3" id_value="{{item.id}}"/>						
+						</div>
+						<div class="label">{{item.keys}}</div>
+					</div>					
+				</li>				
 			</ul>
 			<div class="loadmore" id="loadmore" v-on:click="clickLoadMore">-- 加载更多 --</div>
 		
@@ -60,7 +162,7 @@
 </body>
  
 <script type="text/javascript" charset="UTF-8">  
-
+//alert(screen.width);
 _T.ready(function(){
 	_T.mui_init();
 	
@@ -92,10 +194,13 @@ _T.ready(function(){
 			clickArticleItem:function(){
 				var that = this;
 				var dom = $(event.target);
-		 
+				var idvalue = dom.attr('id_value');
+				if(idvalue=="" || idvalue==null || idvalue==undefined){
+					idvalue = dom.parent(".item").attr('id_value');
+				}
 				_T.open({
 					id:"disc_article",
-				    url:"dics_article.html?id="+dom.attr('id_value'),
+				    url:"dics_article.html?id="+idvalue,
 				});				
 			},
 			clickLoadMore:function(){

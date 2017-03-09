@@ -17,23 +17,25 @@
 .album_title{
 	font-size: 0.8rem;
 }
+.downloadlist{
+	font-size: 1rem;
+}
+.blank{
+	height:5px
+}
+ 
 </style>
-<body class="mp3_list">
-	<!--<header class="mui-bar mui-bar-nav">
-		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
-		<h1 class="mui-title">音乐</h1>
-	</header>		-->
-	<div class="mui-content">			 
-		<!--<div style="height: 45px;"></div>-->
-		<ul class="mui-table-view">
-			<li class="mui-table-view-cell">
-			<a class="mui-navigate-right" href="mp3_download_list.html">
-			<span class="mui-badge mui-badge-danger" id="ddnum">等待下载</span>
+<body class="mp3_listn">
+	<div class="mui-content" style="margin-top: 0px;">			 
+		<ul class="mui-table-view" style="margin-top: 0px;">  
+			<li class="mui-table-view-cell" >
+			<a class="mui-navigate-right downloadlist" href="mp3_download_list.html"">
+			<span class="mui-badge mui-badge-danger" id="ddnum"></span>
 				下载的歌曲
 			</a>
 			</li>
 		</ul>
-		<h5 style="background-color:#efeff4;margin-left: 12px;">热门专辑</h5>
+		<div class="blank"></div>
 		<ul class="mui-table-view mui-grid-view">	
 			<li class="mui-table-view-cell mui-media mui-col-xs-6" v-for="item in sr.list">
 				<a href="mp3_album.html?album_id={{item.id}}" album_id="{{item.id}}"><!-- v-on:click="clickAlbum"-->

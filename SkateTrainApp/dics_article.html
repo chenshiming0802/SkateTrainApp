@@ -20,16 +20,25 @@
     <link href="css/app.css" rel="stylesheet"/>
 </head>
 <style>
-.disc_article .article_title{
-	font-weight: bold;
-	padding: 5px 0px 5px 10px;
+.mui-content{
+	padding: 10px;
+}
+.article_title{
+	width: 100%;
+	font-size: 1rem;
+	font-weight: bold;	
+	line-height: 1.5rem;
+	padding: 15px 0px 6px 0px;
+}	
+.article_keys{
+	width: 100%;
+	font-size: 0.9rem;
+	padding: 0px 0px 10px 0px;
 }	
 .disc_article .article_img{
 	width: 100px;
 }
-.disc_article .article_title{
-	padding-left: 10px;
-}
+
 .disc_article .key_str{
 	float: left;
 	line-height: 22px;
@@ -37,6 +46,29 @@
 	margin: 5px 0px 5px 10px;
 	padding: 5px 5px 5px 5px;
 } 
+.item_activie{
+
+}
+.item_activie .img_title{
+	color:red;
+}
+.file_div_img {
+	width:100%
+}	
+.film_body{
+	font-size: 1rem;
+	line-height: 1.8rem;
+}
+.relative{
+	font-size: 1rem;
+	font-weight: bold;
+	line-height: 1.8rem;
+	color:#DD524D;
+}
+.ritem{
+	font-size: 0.8rem;
+	line-height: 1.0rem;	
+}
 </style>
 	<!-- 由于内嵌页面会造成Image控件高度计算错误,造成图片显示在屏幕外    -->
 	<header class="mui-bar mui-bar-nav">
@@ -47,46 +79,31 @@
 <body class="disc_article" id='disc_article'>
 	<div class="mui-content">	
 		<div class="article_title">{{sr.model.title}}</div>
+		<div class="article_keys">{{{sr.model.keysbar}}}</div>
 		<div class='film' id="file_div" style="width:100%;">
-			<!--<video   webkit-playsinline id="videoMedia" class="margin" controls="controls"  width="100%" preload> 
-			  		<source  id="filmsource" type="video/mp4" src="http://192.168.0.3/SkateTrainWar/res/file/tiance1/5.mp4"/>
-				Your browser does not support the video tag.
-			</video>					-->
+		</div>
+			
+		<div class="film_body">
+			{{{sr.model.content}}}
 		</div>
 		<BR>
+		<div class="relative">相关推荐</div>
 		<div class="mui-card">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media"  v-for="item in sr2.list">
-					<a href="javascript:;" v-on:click="clickArticleItem" id_value="{{item.id}}">
-						<img class="article_img mui-pull-left" v-bind:src="D.url_file+item.small_file_path"  id_value="{{item.id}}">
-						<div class="article_title mui-media-body"  id_value="{{item.id}}">
-							{{item.title}}
-							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.keys}}</p>
-							<p class='mui-ellipsis'  id_value="{{item.id}}">{{item.publish_time}}</p>
-						</div>
-					</a>
+					<div class="ritem" v-on:click="clickArticleItem" id_value="{{item.id}}">
+						{{item.title}}
+					</div>
 				</li>
 			</ul>		
 		</div>
 	</div>
 </body>
- 
-<style>
-.item_activie{
 
-}
-.item_activie .img_title{
-	color:red;
-}
-	
-</style>
 <script type="text/javascript" charset="UTF-8">			
 _T.ready(function(){
 	_T.mui_init();
-	var w = $("#file_div").width();
-	var h = parseInt(w*9/16);
-	$("#file_div").height(h);
-	$(".film_b").height(h+2);
+
  	//$(".film_b").css("height",(window.screen.width*480/800-20)+"px");
 	//alert($("#file_div").height());
 	new Vue({
@@ -101,29 +118,46 @@ _T.ready(function(){
 			var that = this;
 			//_T.ajax_json('dics_article?id='+_T.get('id'),function(data){
 			_T.ajax_json('dics_article/?id='+_T.get('id'),function(data){
+				var keysbar = "";
+				if(data.model.publish_time.length>16){
+					keysbar += data.model.publish_time.substr(5,11);
+				}
+				keysbar += "&nbsp;&nbsp;"+data.model.keys;
+				if(data.model.article_from!='' && data.model.article_from!=null && data.model.article_from!=undefined){
+					keysbar += "/&nbsp;&nbsp;转载自"+data.model.article_from;
+				}
+				data.model.keysbar = keysbar;
+				data.model.content = _T.parseHtml(data.model.content);
 				that.sr = data;
-				//$("#filmsource").attr("src",_D.url_file+data.model.film_file);
-				console.log(_D.url_file+data.model.filmimg_file_path);
-				//console.log(data.model.film.file_type);
+
+				if(data.model.filmimg_file_type=="youku"){
+					var w = $("#file_div").width();
+					var h = parseInt(w*9/16);
+					$("#file_div").height(h);
+					$(".film_b").height(h+2);					
+					player = new YKU.Player('file_div',{
+						styleid: '0',
+						client_id: '5ae0cc8a903d23c8',//'299b3396bf758ea9',
+						vid: data.model.filmimg_file_path,
+						newPlayer: false,
+						autoplay: true,
+						events:{
+							onPlayerReady: function(){ }
+						}
+					}); 					
+				}else if(data.model.filmimg_file_type=="file"){
+					//图片处理
+				}
+
+				that.sr.model.content = _T.parseHtml(that.sr.model.content);
 			
-				player = new YKU.Player('file_div',{
-					styleid: '0',
-					client_id: '5ae0cc8a903d23c8',//'299b3396bf758ea9',
-					vid: data.model.filmimg_file_path,
-					newPlayer: false,
-					autoplay: true,
-					events:{
-						onPlayerReady: function(){ }
-					}
-				}); 				
-				
 			}); 
 			
 			
 				_T.ajax_json('disc_list/',function(data){
 					console.log('------------------');
 					console.log(data);
-					that.sr2 = data;
+					that.sr2 = data; 
 				});					 
 			
 		},		

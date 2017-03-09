@@ -17,30 +17,6 @@
 	body{
 		overflow:scroll;overflow-y:hidden;
 	}
-	.ilist{
-		position:relative;
-	}
-	.song_title{
-		font-size: 1rem;
-	}
-	.song_p{
-		font-size: 0.6rem;
-		color:#c0c0c0;
-	}	
-	.iplayer{
-		position:absolute;
-		right:0.6rem;
-		top:0.6rem;
-	 
-		height: 45px;
-	}
-	.idownload{
-		position:absolute;
-		right:3.6rem;
-		top:0.6rem;
- 
-		height: 45px;
-	}	
 	.albuminfo{
 		background-color:#929292;
 		width: 100%;
@@ -49,12 +25,11 @@
 	}
 	.albuminfo .bb{	
 		position: absolute;
-		top:1rem;
 		left:1rem;		
 	}
 	.albuminfo .pic{
-		height:6rem;
-		float:left;
+		height:8rem;
+		float:left;  
 	}
 	.albuminfo .title{
 		float:left;
@@ -62,34 +37,77 @@
 		margin-top:1rem;
 		font-size: 1rem;
 		font-weight: bold;
-		height: 4rem;
 		overflow:auto;
-		width:120px
-	}	
+		width:160px
+	}
+	
+
+	.ilist_l{
+		float:left;	
+
+	}
+		.song_title{
+			font-size: 1rem;
+			line-height: 1.5rem;
+
+		}
+		.song_p{
+			font-size: 0.6rem;
+			line-height: 0.6rem;
+		}
+	.ilist_r{
+		float:right;
+	}
+	.playallbar{
+		display:table;
+	}
+	.wrap{
+		display:table-cell;
+		vertical-align:middle;
+	}
+	.playallbar img{
+		float:left;
+		padding-left: 10px;
+	}
+	.playall{
+		float:left;
+		font-size:1rem;
+		line-height: 2rem;
+	}
+	.mcount{
+		float:left;
+		font-size:0.7rem;
+		line-height: 2rem;	
+		padding-left: 10px;	
+	}
 </style>
 <body class="mp3_album"  scroll="no">
-	<!--<header class="mui-bar mui-bar-nav">
-		<a id="back" class="mui-icon mui-icon-arrowleft mui-pull-left" style="color: #999;"></a>
-		<h1 class="mui-title" id="title">{{sr.album.title}}</h1>		
-	</div>
-	</header>	-->
 	<div class="mui-content">
-		<!--<div style="height: 45px;"></div>-->
 		<div class="albuminfo">
 			<div class="bb">
 				<img v-bind:src="D.url_file+sr.album.big_image" class="pic"/>
 				<div class="title">{{sr.album.title}} </div>				
 			</div>
 		</div>
-		<a style="background-color:#efeff4;margin-left: 12px;height: 1.2rem;line-height: 2rem;" v-on:click="clickPlayAll"><img src='img/player.png' style="width: 26px">  播放全部</a>
-		<ul class="mui-table-view"> 
+		<div class="playallbar" v-on:click="clickPlayAll">
+			<div class="wrap">
+				<img src='img/player.png'  v-on:click="clickPlayAll">  
+				<div class="playall" v-on:click="clickPlayAll">播放全部</div>		
+				<div class="mcount">(共{{size}}首歌曲)</div>
+			</div>
+		</div>
+		<ul class="mui-table-view">  
 			<li class="mui-table-view-cell ilist" v-for="(index,item) in sr.list">
-		        <div class="song_title" v-on:click="clickPlay" index="{{index}}">{{item.title}}</div>
-		        <div class="song_p" v-on:click="clickPlay" index="{{index}}">{{item.singer}}</div>
-		        <div class="iplayer" v-on:click="clickPlay" index="{{index}}"><img src='img/player.png' index="{{index}}"></div>
-		        <div class="idownload" v-on:click="clickDownload" index="{{index}}"><img src='img/download.png' index="{{index}}" v-if="(item.download_flag == 'hasnotdown')"></div>
-				<div class="idownload" index="{{index}}"><img src='img/downloading.gif' index="{{index}}" v-if="(item.download_flag == 'downloading')"></div>
-				<div class="idownload" index="{{index}}"><img src='img/downloaded.png' index="{{index}}" v-if="(item.download_flag == 'downloaded')"></div>
+				<div class="ilist_l">
+			        <div class="song_title" v-on:click="clickPlay" index="{{index}}">{{item.title}}</div>
+			        <div class="song_p" v-on:click="clickPlay" index="{{index}}">{{item.singer}}</div>					
+				</div>
+				<div class="ilist_r">
+			        <div class="idownload" v-on:click="clickDownload" index="{{index}}"><img src='img/download.png' index="{{index}}" v-if="(item.download_flag == 'hasnotdown')"></div>
+					<div class="idownload" index="{{index}}"><img src='img/downloading.gif' index="{{index}}" v-if="(item.download_flag == 'downloading')"></div>
+					<div class="idownload" index="{{index}}"><img src='img/downloaded.png' index="{{index}}" v-if="(item.download_flag == 'downloaded')"></div>				
+				</div>
+		        
 			</li>
 		</ul>
 		
@@ -108,7 +126,7 @@ function getSkateDownloadingData(){
 	return eval(datas);
 }
 var vue;
-function plusReady(){
+
 	_T.ready(function(){
 		_T.mui_init();
 		
@@ -117,33 +135,14 @@ function plusReady(){
 			data:{
 				D:window._D,
 				sr:null,
+				size:0,
 				pageno:1,
 				pagesize:10
 			},
 			ready:function(){
 				//alert('ready');
 				var that = this;
-				_T.ajax_json('mp3_album/?album_id='+_T.get('album_id'),function(data){	
-					var ds = getSkateDownloadingData();
-					var ds1 = getSkateDownloadedData();	
-					console.log(JSON.stringify(ds));
-					console.log(JSON.stringify(ds1));
-					var i,j; 
-					for(i=0,j=data.list.length;i<j;i++){
-						data.list[i].download_flag = "hasnotdown";
-						if(_.findIndex(ds, { song_file: data.list[i].song_file})>=0){
-							data.list[i].download_flag = "downloading";
-	 						continue;
-						}
-						if(_.findIndex(ds1, { song_file: data.list[i].song_file})>=0){
-							data.list[i].download_flag = "downloaded";
-							continue;
-						}					
-					} 
-					console.log(JSON.stringify(data));
-					//alert(JSON.stringify(data)); 
-					that.sr = data;
-				});	
+
 			},		
 			methods:{
 				clickPlay:function(){
@@ -175,6 +174,15 @@ function plusReady(){
 					var index = dom.attr("index");
 					var data = that.sr.list[index];
 					var sub = plus.webview.getTopWebview();
+					
+					var i ,j;
+					for(i=0,j=vue.sr.list.length;i<j;i++){
+						if(vue.sr.list[i].download_flag == "downloading"){
+							mui.toast("请等待【"+vue.sr.list[i].title+"】下载完成后，再点击下载",{ duration:'long', type:'div' }) ;
+							return;
+						}
+					} 					
+					
 					data.url = data.song_file;
 					data.download_flag = "downloading";
 					//that.sr.$set(index,data);
@@ -189,7 +197,31 @@ function plusReady(){
 	});	
 
 
+function plusReady(){ 
+				_T.ajax_json('mp3_album/?album_id='+_T.get('album_id'),function(data){	
+					var ds = getSkateDownloadingData();
+					var ds1 = getSkateDownloadedData();	
+					console.log(JSON.stringify(ds));
+					console.log(JSON.stringify(ds1));
+					var i,j; 
+					for(i=0,j=data.list.length;i<j;i++){
+						data.list[i].download_flag = "hasnotdown";
+						if(_.findIndex(ds, { song_file: data.list[i].song_file})>=0){
+							data.list[i].download_flag = "downloading";
+	 						continue;
+						}
+						if(_.findIndex(ds1, { song_file: data.list[i].song_file})>=0){
+							data.list[i].download_flag = "downloaded";
+							continue;
+						}					
+					} 
+					console.log(JSON.stringify(data));
+					//alert(JSON.stringify(data)); 
+					vue.sr = data;
+					vue.size = data.list.length; 
  
+				});	
+				_T.bindTopViewBack("#back");
 }
 if(window.plus){
 	plusReady();

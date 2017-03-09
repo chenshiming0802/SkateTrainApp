@@ -17,7 +17,7 @@
 	<div class="mui-content">	
 		<div class="courselist" id="list">
 			<div  class="item" v-for="item in sr"> 
-				<img v-bind:src="D.url_file+item.file_path"  v-on:click="clickItem" course_id="{{item.course_id}}">
+				<img v-bind:src="D.image_file+item.file_path"  v-on:click="clickItem" course_id="{{item.course_id}}">
 				<div class="title">{{item.title}}</div> 
 				<!--<div class="users">{{item.count_user}}人参加</div> -->
 			</div>
