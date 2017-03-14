@@ -16,7 +16,7 @@ function startPlayer(i){
 			player = null;
 		}
 		mui.toast("开始播放 "+mp3list[index].title,{ duration:'long', type:'div' });
-		var song_url = window._D.url_file+mp3list[index].song_file;
+		var song_url = window._D.image_file+mp3list[index].song_file;
 		//console.log(window._D.url_file+mp3list[index].song_file);
 		
 		//如果播放歌曲列表中有本地地址（download_filename），则播放本地地址
@@ -30,7 +30,7 @@ function startPlayer(i){
 			//无本地地址，则到已经下载的列表中查找
 			var ds1 = getSkateDownloadedData();
 			console.log("ds1:"+JSON.stringify(ds1));
-			console.log(window._D.url_file+mp3list[index].song_file);
+			console.log(window._D.image_file+mp3list[index].song_file);
 			var i,j;
 			for(i=0,j=ds1.length;i<j;i++){
 				if(ds1[i].url==song_url){
@@ -41,6 +41,7 @@ function startPlayer(i){
 			}			
 		}
 		console.log("play:="+isLocal+"/"+song_url);
+
 		player = plus.audio.createPlayer(song_url);
 		player.play( function () {
 			//alert( "Audio play success!" ); 
@@ -178,7 +179,7 @@ function addDownloadSongTask(datas){
 			break;
 		}
 		//没有发现列表，
-		d.url = window._D.url_file+d.url;
+		d.url = window._D.image_file+d.url;
 		ds.push(d);	
 	}		
 	
