@@ -10,7 +10,7 @@
 		  t2.singer,
 		  t2.song_file
 		FROM td_mp3_album_song t1,
-		  v_td_mp3_song t2
+		  td_mp3_song t2
 		WHERE t1.is_deleted = '0'
 		    AND t1.song_id = t2.id
 		    AND t1.album_id = #album_id#
@@ -22,10 +22,11 @@
 		SELECT
 		  t.id,
 		  t.title,
-		  small_image,
-		  big_image    
-		FROM v_td_mp3_album t
+		  image_file small_image,
+		  image_file big_image    
+		FROM td_mp3_album t  
 		WHERE  t.publish_time &lt; CURRENT_TIMESTAMP
+		and t.is_deleted = '0'
 		ORDER BY t.no desc
 	</select>
 	<select id="index_sub" parameterClass="java.util.HashMap"
