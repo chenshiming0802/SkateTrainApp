@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no"> 
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/appdata.js"></script>
+    <script src="js/app.js"></script>
+ 
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+</head>
+<style>
+.player{
+	margin:0px 0px 0px 5px;
+	padding: 0px 0px 0px 0px;
+	width: 98%;height: 45px; 
+}
+.player .title {
+	font-size: 1rem;
+	line-height: 45px;
+	float:left;
+}
+.ic_mp3{
+	width: 20px;
+	margin:14px 6px 12px 0px;
+	float:left;
+}
+.mic{
+	float: right;
+	width: 20px;
+	margin: 14px 10px 12px 12px;
+}
+.ic_pause{
+	display: none;
+}
+body{
+ 
+}
+</style>
+<body class="mp3_play">
+	<div class="mui-content">	
+		<div class="player">
+			<img class="ic_mp3" src='img/ic_mp3.png'/>
+			<div class="title" id='mp3_title'>没有音乐</div>			
+			<img class="ic_next mic" src='img/ic_next.png' onClick="nextPlayer()"/>
+			<img class="ic_pause mic" src='img/ic_pause.png' onClick="pausePlayer()"/>
+			<img class="ic_play mic" src='img/ic_play.png' onClick="resumePlayer()"/>			
+			<img class="ic_preview mic" src='img/ic_preview.png' onClick="previewPlayer()"/>
+		</div>
+	</div>	
+</body>
+ 
+<script type="text/javascript" charset="UTF-8">   
+
+function test(str){
+	alert('index windows:'+str);
+}
+
+//---------------------player start
+var mp3list;//播放列表
+var player;//播放器
+var currentIndex;//当前播放
+//var datas = [{"id":"1","url":"http://www.baidu.com/1.mp3","title":"wanna you"}];
+function setMp3List(datas){
+	mp3list = eval(  datas );
+	console.log(mp3list);  
+}
+//http://www.html5plus.org/doc/zh_cn/audio.html#plus.audio.createPlayer
+function startPlayer(i){
+	
+	if(mp3list.length>0){
+		var index = i % mp3list.length;
+		$("#mp3_title").html(mp3list[index].title);
+		if(player!=undefined){
+			player.stop();	
+			player = null;
+		}
+		//player = plus.audio.createPlayer( "http://192.168.0.3:82/SkateTrainFile/res/file/mp3/friendship.mp3" );
+		console.log(window._D.url_file+mp3list[index].song_file);
+		player = plus.audio.createPlayer(window._D.url_file+mp3list[index].song_file);
+		player.play( function () {
+			//alert( "Audio play success!" ); 
+			nextPlayer();		
+		}, function ( e ) { 
+			alert( "Audio play error: " + e.message ); 
+		} );
+		$('.ic_play').hide();
+		$('.ic_pause').show();				
+		currentIndex = index;
+	}
+}
+ 
+function pausePlayer(){
+	if(player!=undefined){
+		player.pause();
+		$('.ic_play').show()
+		$('.ic_pause').hide();
+	}
+}
+function resumePlayer(){
+	if(player!=undefined){
+		player.resume();
+		$('.ic_play').hide();
+		$('.ic_pause').show();		
+	}	
+}
+function nextPlayer(){
+	startPlayer(currentIndex+1);
+}
+function previewPlayer(){
+	startPlayer(currentIndex);
+}
+//--------------------player end
+
+function plusReady(){
+	try{
+//		setMp3List([{"id":"1","url":"file/wanna.aac","title":"wanna you"},{"id":"1","url":"file/friendship.mp3","title":"friendship"}]);
+//		startPlayer(0);
+		
+//		setMp3List({"id":97,"song_file":null,"title":"around the world","singer":"aqua"});startPlayer(0); 
+	
+	}catch(e){}
+} 
+
+
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
+</script>
+</html>

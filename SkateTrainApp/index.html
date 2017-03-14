@@ -125,12 +125,12 @@
 			<span class="mui-tab-label">教学视频</span>
 		</a>
 		<a class="mui-tab-item" href="#" ehref="disc_list.html" >
-			<span class="mui-icon mui-icon-paperplane" id="d_newnum" ></span>
+			<span class="mui-icon mui-icon-paperplane" id="d_newnum_disc" ></span>
 			<span class="mui-tab-label" >发现</span>
 		</a>
 		<a class="mui-tab-item" href="#" ehref="mp3_list.html" >
-			<span class="mui-icon mui-icon-settings" id="d_newnum" ></span>
-			<span class="mui-tab-label" >音乐</span>
+			<span class="mui-icon mui-icon-settings" id="d_newnum_mp3" ></span>
+			<span class="mui-tab-label" >轮滑音乐</span>
 		</a>		
 	</nav>	
 </body>
@@ -140,15 +140,18 @@
 var mobile_app_id;
 function plusReady(){
 			try{
-				//发现的红点
+				//tabs添加发现的红点
 				console.log("plusReady=");
 				mobile_app_id = plus.device.uuid;
 				console.log("mobile_app_id="+mobile_app_id);
 				_T.ajax_json("disc_newnum/?mobile_app_id="+mobile_app_id,function(data){
 					console.log(data);
-					if(parseInt(data.num)>0){
-						$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
+					if(parseInt(data.disc.num)>0){
+						$("#d_newnum_disc").html("<span class='mui-badge' >"+data.disc.num+"</span>");		
 					}
+					if(parseInt(data.mp3.num)>0){
+						$("#d_newnum_mp3").html("<span class='mui-badge' >"+data.mp3.num+"</span>");		
+					}					
 				});		
 			}catch(e){			
 		}
@@ -253,19 +256,34 @@ _T.ready(function(){
 				}
 				
 				
-		 		//发现的红点
+		 		//点击tab，清空红点，并后台添加日志
 		 		if(targetTab=="disc_list.html"){
-					$("#d_newnum").html("");	  
+					$("#d_newnum_disc").html("");	     
+					try{ 
+						//var mobile_app_id = plus.runtime.appid;
+						console.log("mobile_app_id 2="+mobile_app_id);
+						_T.ajax_json("td_user_disc_log_add/?type=disc&mobile_app_id="+mobile_app_id,function(data){
+//							alert(JSON.stringify(data));
+//							if(parseInt(data.disc.num)>0){  
+//								$("#d_newnum_disc").html("<span class='mui-badge' >"+data.disc.num+"</span>");		
+//							}
+						});						
+					}catch(e){}		 			
+		 		}	
+		 		if(targetTab=="mp3_list.html"){
+					$("#d_newnum_mp3").html("");	  
 					try{
 						//var mobile_app_id = plus.runtime.appid;
 						console.log("mobile_app_id 2="+mobile_app_id);
-						_T.ajax_json("td_user_disc_log_add/?mobile_app_id="+mobile_app_id,function(data){
-							if(parseInt(data.num)>0){
-								$("#d_newnum").html("<span class='mui-badge' >"+data.num+"</span>");		
-							}
+						_T.ajax_json("td_user_disc_log_add/?type=mp3&mobile_app_id="+mobile_app_id,function(data){
+//							if(parseInt(data.mp3.num)>0){
+//								$("#d_newnum_mp3").html("<span class='mui-badge' >"+data.mp3.num+"</span>");		
+//							}
 						});						
 					}catch(e){}		 			
-		 		}							
+		 		}		 		
+		 		
+		 		
 				//更改当前活跃的选项卡
 				activeTab = targetTab;
 			});
@@ -284,13 +302,7 @@ _T.ready(function(){
 	//mui tabs end
 
 });
-//$("#back").click(function(){
-//	var wvs=plus.webview.getDisplayWebview();
-//	for(var i=0;i<wvs.length;i++){
-//		console.log("Display webview "+i+": "+wvs[i].getURL());
-//		wvs[i].back();
-//	}
-//});
+
 
 function clickDebug(){
 	//alert('hi');
